@@ -55,8 +55,10 @@ import Yesod.Core.Handler
 -- import Debug.Trace
 import Handler.JsonJuggler
 
-getBlkTxAddressR :: Text -> Handler Value
-getBlkTxAddressR address = do
+getBlkTxAddressR a = (getBlkTxAddressR' a 0)
+
+getBlkTxAddressR' :: Text -> Integer -> Handler Value
+getBlkTxAddressR' address offset = do
                    addHeader "Access-Control-Allow-Origin" "*"
                    blks <- runDB $ E.select $
                                         E.from $ \(blk `E.InnerJoin` bdRef `E.FullOuterJoin` rawTX) -> do
@@ -68,11 +70,15 @@ getBlkTxAddressR address = do
                                                       E.||. ( rawTX  E.^. RawTransactionToAddress E.==. E.val (Just (Address wd160) ))))
 
                                         E.limit $ (fetchLimit)
+                                        E.offset $ (limit * off)
 
                                         E.orderBy [E.desc (bdRef E.^. BlockDataRefNumber)]
 
                                         return blk
-                   returnJson $ nub $ P.map bToBPrime (P.map entityVal (blks :: [Entity Block])) 
+                   returnJson $ nub $ P.map bToBPrime' (P.map entityVal (blks :: [Entity Block])) 
 
         where
           ((wd160, _):_) = readHex $ T.unpack $ address ::  [(Word160,String)]
+          limit = (fromIntegral $ fetchLimit :: Int64)
+          off = (fromIntegral $ offset :: Int64)
+                    

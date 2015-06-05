@@ -1,3 +1,5 @@
+<script src=https://code.jquery.com/jquery-2.1.4.min.js>
+
 <h1>BlockApps.net - the most convenient and reliable API for writing Blockchain Based applications.
 
 <p>
@@ -7,10 +9,14 @@
   install the peer - simply follow the links below to try the API. 
 
  <p>
-  We have GET routes for <a href="/query">querying transactions</a>, <a href="/query/block">blocks</a> and <a href="query/account/">account states</a>.
+  We have static <a href="/query">GET routes</a> for transactions, blocks and account states.
+  More generally, we support <a href="help.html">query strings</a>.
   See the descriptions within, including examples.
- <break>
+  <break>
   Also, check out a <a href="/index.html">demo</a> of how to parse and visualize the records you've requested.
+  <break>
+  <p>
+    Take a look at our <a href="/testreport.html">build test results</a>.
 <h2>Coming Soon:
 
 <p>
@@ -18,4 +24,3 @@
   <li> Push Notifications - be notified of new blocks, transaction confirmations, as they happen.
   <li> Transaction Signing - sign transactions in the browser, and push them to the network - without running a client locally.
   <li> Network Statistics - view the health of the network, in real time.
-  

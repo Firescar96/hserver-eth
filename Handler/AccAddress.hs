@@ -19,15 +19,19 @@ import Numeric
 
 import qualified Data.Text as T
 import Handler.JsonJuggler
+import Handler.Filters
 
-       
+
+getAccAddressR a = (getAccAddressR' a 0)
+
 -- Parses addresses from hex      
-getAccAddressR :: Text -> Handler Value
-getAccAddressR address = do
+getAccAddressR' :: Text -> Integer -> Handler Value
+getAccAddressR' address offset = do
                            addHeader "Access-Control-Allow-Origin" "*"
-                           addr <- runDB $ selectList [ AddressStateRefAddress ==. (Address wd160) ] [ LimitTo (fromIntegral $ fetchLimit :: Int)  ] :: Handler [Entity AddressStateRef]
+                           addr <- runDB $ selectList [ AddressStateRefAddress ==. (toAddr address) ] [ LimitTo limit , OffsetBy (limit * off) ] :: Handler [Entity AddressStateRef]
                            returnJson $ P.map asrToAsrPrime (P.map entityVal (addr :: [Entity AddressStateRef])) -- consider removing nub - it takes time n^{2}
                          where
                            ((wd160, _):_) = readHex $ T.unpack $ address ::  [(Word160,String)]
-
+                           limit = (fromIntegral $ fetchLimit :: Int)
+                           off = (fromIntegral $ offset :: Int)
                     

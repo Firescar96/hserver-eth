@@ -39,7 +39,7 @@ postIncludeTransactionR = do
    addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
    tx <- parseJsonBody :: Handler (Result RawTransaction')
    case tx of
-       (Success (RawTransaction' raw)) -> do
+       (Success (RawTransaction' raw "")) -> do
                 _ <- runDB $ insert $ raw
                 return ()
        (Error msg) -> do

@@ -5,7 +5,7 @@ import Yesod.Core.Handler
 
 getDemoR :: Handler Html
 getDemoR = defaultLayout $ do
-  addScript $ StaticR js_address_explorer_js
+  --addScript $ StaticR js_address_explorer_js
   sendFile "text/html" "static/index.html"
 
 getAddressExplorerR :: Handler ()

@@ -26,10 +26,12 @@ import Handler.JsonJuggler
 getBlkTimeRangeR :: UTCTime -> UTCTime -> Handler Value
 getBlkTimeRangeR g1 g2 = do addHeader "Access-Control-Allow-Origin" "*"
                             blks <- runDB $ E.select $
-                               E.from $ \(a, t) -> do
-                               E.where_ ( (a E.^. BlockDataRefTimestamp E.>=. E.val g1 ) E.&&. (a E.^. BlockDataRefTimestamp E.<=. E.val g2)  E.&&. ( a E.^. BlockDataRefBlockId E.==. t E.^. BlockId))
+
+                               E.from $ \(blk `E.InnerJoin` bdRef) -> do
+                               E.on ( bdRef E.^. BlockDataRefBlockId E.==. blk E.^. BlockId )   
+                               E.where_ (( (bdRef E.^. BlockDataRefTimestamp E.>=. E.val g1 ) E.&&. (bdRef E.^. BlockDataRefTimestamp E.<=. E.val g2)) )--  E.&&. ( bdRef E.^. BlockDataRefBlockId E.==. blk E.^. BlockId))
                                
-                               E.orderBy [E.desc (a E.^. BlockDataRefNumber)]
+                               E.orderBy [E.desc (bdRef E.^. BlockDataRefNumber)]
                                E.limit $ fetchLimit
-                               return t
-                            returnJson $ nub $ P.map bToBPrime (P.map entityVal (blks :: [Entity Block])) -- consider removing nub - it takes time n^{2}
+                               return blk
+                            returnJson $ nub $ P.map bToBPrime' (P.map entityVal (blks :: [Entity Block])) -- consider removing nub - it takes time n^{2}

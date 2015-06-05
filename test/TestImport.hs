@@ -29,7 +29,7 @@ withApp = before $ do
         []
         ignoreEnv
     foundation <- makeFoundation settings
-    wipeDB foundation
+    --wipeDB foundation
     return foundation
 
 -- This function will truncate all of the tables in your database.

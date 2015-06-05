@@ -28,6 +28,7 @@ import Blockchain.Database.MerklePatricia
 import Blockchain.ExtWord
 import Blockchain.Util
 
+
 import Data.ByteString.Base16 as B16
 import qualified Data.ByteString.Lazy as BS
 
@@ -55,76 +56,64 @@ import Yesod.Core.Handler
 import Debug.Trace
 import Handler.JsonJuggler
 
-getFilter::(E.Esqueleto query expr backend) =>(expr (Entity BlockDataRef), expr (Entity AddressStateRef), expr (Entity RawTransaction), expr (Entity Block))-> (Text, Text) -> expr (E.Value Bool)
+import Control.Monad
+import Data.Bool
 
-getFilter (bdRef, accStateRef, rawTX, blk) ("number", v)    = bdRef E.^. BlockDataRefNumber E.==. E.val (P.read $ T.unpack v :: Integer)
-getFilter (bdRef, accStateRef, rawTX, blk) ("minnum", v)    = bdRef E.^. BlockDataRefNumber E.>=. E.val (P.read $ T.unpack v :: Integer)
-getFilter (bdRef, accStateRef, rawTX, blk) ("maxnum", v)    = bdRef E.^. BlockDataRefNumber E.<=. E.val (P.read $ T.unpack v :: Integer)
+import Handler.Filters
 
-getFilter (bdRef, accStateRef, rawTX, blk) ("gas", v)       = bdRef E.^. BlockDataRefGasUsed E.==. E.val (P.read $ T.unpack v :: Integer) 
-getFilter (bdRef, accStateRef, rawTX, blk) ("mingas", v)    = bdRef E.^. BlockDataRefGasUsed E.>=. E.val (P.read $ T.unpack v :: Integer) 
-getFilter (bdRef, accStateRef, rawTX, blk) ("maxgas", v)    = bdRef E.^. BlockDataRefGasUsed E.<=. E.val (P.read $ T.unpack v :: Integer) 
-
-getFilter (bdRef, accStateRef, rawTX, blk) ("gaslim", v)    = bdRef E.^. BlockDataRefGasLimit E.==. E.val (P.read $ T.unpack v :: Integer) 
-getFilter (bdRef, accStateRef, rawTX, blk) ("mingaslim", v) = bdRef E.^. BlockDataRefGasLimit E.>=. E.val (P.read $ T.unpack v :: Integer) 
-getFilter (bdRef, accStateRef, rawTX, blk) ("maxgaslim", v) = bdRef E.^. BlockDataRefGasLimit E.<=. E.val (P.read $ T.unpack v :: Integer) 
-
-getFilter (bdRef, accStateRef, rawTX, blk) ("diff", v)      = bdRef E.^. BlockDataRefDifficulty E.==. E.val (P.read $ T.unpack v :: Integer) 
-getFilter (bdRef, accStateRef, rawTX, blk) ("mindiff", v)   = bdRef E.^. BlockDataRefDifficulty E.>=. E.val (P.read $ T.unpack v :: Integer) 
-getFilter (bdRef, accStateRef, rawTX, blk) ("maxdiff", v)   = bdRef E.^. BlockDataRefDifficulty E.<=. E.val (P.read $ T.unpack v :: Integer) 
-
-getFilter (bdRef, accStateRef, rawTX, blk) ("time", v)      = bdRef E.^. BlockDataRefTimestamp E.==. E.val (stringToDate v)
-getFilter (bdRef, accStateRef, rawTX, blk) ("mintime", v)   = bdRef E.^. BlockDataRefTimestamp E.>=. E.val (stringToDate v)
-getFilter (bdRef, accStateRef, rawTX, blk) ("maxtime", v)   = bdRef E.^. BlockDataRefTimestamp E.<=. E.val (stringToDate v)
-
-getFilter (bdRef, accStateRef, rawTX, blk) ("txaddress", v) = (rawTX E.^. RawTransactionBlockId E.==. blk E.^. BlockId)
-                                                              E.&&. ((rawTX E.^. RawTransactionFromAddress E.==. E.val (Address wd160)))
-                                                                      E.||. (rawTX E.^. RawTransactionToAddress E.==. E.val (Just (Address wd160)))
-                                                              
-      where ((wd160, _):_) = readHex $ T.unpack $ v ::  [(Word160,String)]
-
-getFilter (bdRef, accStateRef, rawTX, blk) ("coinbase", v) = bdRef E.^. BlockDataRefCoinbase E.==. E.val (Address wd160)
-      where ((wd160, _):_) = readHex $ T.unpack $ v ::  [(Word160,String)]
-
-
---getFilter (bdRef, accStateRef, rawTX, blk) ("coinbase", v) = bdRef E.^. BlockDataRefCoinbase E.==. E.val (Address wd160)
---      where ((wd160, _):_) = readHex $ T.unpack $ (P.read $ ("\"" P.++ (T.unpack v) P.++ "\"") ):: [(Word160,String)]
-
+import Data.Set
 
 blockIdRef :: (E.Esqueleto query expr backend) =>(expr (Entity BlockDataRef), expr (Entity Block))-> expr (E.Value Bool)
 blockIdRef (a, t) = (a E.^. BlockDataRefBlockId E.==. t E.^. BlockId)
+                    
 
 getBlockInfoR :: Handler Value
 getBlockInfoR = do
-  	           getParameters <- reqGetParams <$> getRequest
-                   liftIO $ traceIO $ show getParameters
+                   getParameters <- reqGetParams <$> getRequest
+                   
+                   let offset = (fromIntegral $ (maybe 0 id $ extractPage "page" getParameters)  :: Int64)
+                   let index  = (fromIntegral $ (maybe 0 id $ extractPage "index" getParameters)  :: Integer)
+                   let raw    = (fromIntegral $ (maybe 0 id $ extractPage "raw" getParameters) :: Integer) > 0
+
+                   -- liftIO $ traceIO $ "parameters: " P.++ show getParameters
+                   -- liftIO $ traceIO $ "index: " P.++ show index
+                   -- liftIO $ traceIO $ "offset: " P.++ show offset
+                   -- liftIO $ traceIO $ "raw: " P.++ show raw
+                   
                    addHeader "Access-Control-Allow-Origin" "*"
+
                    blks <- runDB $ E.select $
+                                        
                                         E.from $ \(blk `E.InnerJoin` bdRef `E.FullOuterJoin` rawTX `E.LeftOuterJoin` accStateRef) -> do
                                         
                                         E.on ( accStateRef E.^. AddressStateRefAddress E.==. rawTX E.^. RawTransactionFromAddress )
                                         E.on ( rawTX E.^. RawTransactionBlockId E.==. bdRef E.^. BlockDataRefBlockId )
                                         E.on ( bdRef E.^. BlockDataRefBlockId E.==. blk E.^. BlockId )                                        
 
+                                        let criteria = P.map (getBlkFilter (bdRef, accStateRef, rawTX, blk)) $ getParameters 
+                                        let allCriteria = ((bdRef E.^. BlockDataRefNumber) E.>=. E.val index) : criteria
 
-                                        E.where_ ((P.foldl1 (E.&&.) $ P.map (getFilter (bdRef, accStateRef, rawTX, blk)) $ getParameters ))
+                                        E.where_ (P.foldl1 (E.&&.) allCriteria)
 
-                                        E.limit $ (fetchLimit)
+                                        E.offset $ (limit * offset)
+                                        E.limit $ limit
 
-                                        E.orderBy [E.desc (bdRef E.^. BlockDataRefNumber)]
+                                        E.orderBy [E.asc (bdRef E.^. BlockDataRefNumber)]
 
                                         return blk
-                   returnJson $ nub $ P.map bToBPrime (P.map entityVal (blks :: [Entity Block])) -- consider removing nub - it takes time n^{2}
+                   --liftIO $ traceIO $ "number of results: " P.++ (show $ P.length blks)
 
+                   let modBlocks = (nub (P.map entityVal (blks :: [Entity Block])))
+                   let newindex = pack $ show $ 1+(getBlockNum $ P.last modBlocks)
+                   let extra p = P.zipWith extraFilter p (P.repeat (newindex))
+                   -- this should actually use URL encoding code from Yesod
+                   let next p = "/query/block?" P.++  (P.foldl1 (\a b -> (unpack a) P.++ "&" P.++ (unpack b)) $ P.map (\(k,v) -> (unpack k) P.++ "=" P.++ (unpack v)) (extra p))
+                   let addedParam = appendIndex getParameters
 
-    {-
-
-do
-  addHeader "Access-Control-Allow-Origin" "*"
-  blks <- runDB $ E.selectDistinct $
-                                        E.from $ \x@(_, t) -> do
-                                        E.where_ (
-                                          P.foldl1 (E.&&.)     [getFilter x "number", getFilter x "blockId"])
-                                        return t
-  returnJson $ nub $ (P.map entityVal blks) -- consider removing nub - it takes time n^{2}
--}
+                   toRet raw modBlocks (next addedParam) -- consider removing nub - it takes time n^{2}
+               where
+                   toRet raw bs gp = case if' raw bs (P.map bToBPrime (P.zip (P.repeat gp) bs)) of 
+                              Left a -> returnJson a
+                              Right b -> returnJson b
+                   limit = (fromIntegral $ fetchLimit :: Int64)
+                   

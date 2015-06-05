@@ -43,11 +43,15 @@ library
                      Handler.Demo
                      Handler.JsonJuggler
                      Handler.BlkCoinbase,
+                     Handler.Filters
+                     Handler.Help
+                     Handler.TxLast
+                     Handler.Test
                      Handler.BlkTxAddress,
                      Handler.IncludeTransaction,
                      Handler.QueuedTransactions,
                      Handler.PushTransaction
-		     
+
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
         ghc-options:   -Wall -fwarn-tabs -O0
@@ -113,6 +117,8 @@ library
                  , old-locale
                  , ethereum-util
                  , transformers
+                 , postgresql-simple
+                 , postgresql-libpq
 
 executable         api
     if flag(library-only)
@@ -126,7 +132,7 @@ executable         api
 
 test-suite test
     type:              exitcode-stdio-1.0
-    main-is:           Spec.hs
+    main-is:           Main.hs
     hs-source-dirs:    test
     ghc-options:       -Wall
 
@@ -159,3 +165,16 @@ test-suite test
                  , hspec >= 2.0.0
                  , classy-prelude
                  , classy-prelude-yesod
+                 , hspec-wai
+                 , hspec-wai-json
+                 , warp
+                 , wai
+                 , wai-extra
+                 , HUnit
+                 , bytestring
+                 , text
+                 , ethereum-data-sql
+                 , aeson
+                 , blaze-html
+                 , blaze-markup
+                 

@@ -1,0 +1,62 @@
+<script src=https://code.jquery.com/jquery-2.1.4.min.js>
+
+<h1>Querystring help
+
+<h2> Endpoints
+
+<p>There are three REST endpoints, corrensponding to the query of a block, address and a transaction, respectively.
+<p>All of these queries can be appended with <code>page=n</code> for pageing. Pageing starts at 0 so <code>/query?block=xxxx</code> is equivalent to <code>/query?block=xxxx&amp;page=0</code>. For blocks we support indexing. If you want to query a large range, supply <code>index=n</code> where <code>n-1</code> is the last block that you queried. This will supersede paging eventually for all queries.
+
+<h3 id="queryblock"><code>/query/block?</code></h3>
+
+Note that <code>blocks</code> come with a <code>next</code> field that contains the index for the next 100 results.
+
+<ul>
+<li><a href="/query/block?number=0"><code>number</code></a>, <a href="/query/block?maxnumber=10"><code>maxnumber</code></a>, <a href="/query/block?minnumber=20"><code>minnumber</code></a>
+
+<li><a href="/query/block?gaslim=3141592"><code>gas</code></a>, <a href="/query/block?maxgaslim=21352342343"><code>maxgaslim</code></a>, <a href="/query/block?mingaslim=21353"><code>mingaslim</code><br /></a>
+
+<li><a href="/query/block?gasused=1463234"><code>gasused</code></a>, <a href="/query/block?maxgasused=123213"><code>maxgasused</code></a>, <a href="/query/block?mingasused=20"><code>mingasused</code></a>
+
+<li><a href="/query/block?diff=131072"><code>diff</code></a>, <a href="/query/block?maxdiff=21123123"><code>maxdiff</code></a>, <a href="/query/block?mindiff=213"><code>mindiff</code></a>
+
+<li><a href="/query/block?txaddress=1c11aa45c792e202e9ffdc2f12f99d0d209bef70"><code>txaddress</code></a>
+<li><a href="/query/block?coinbase=8c67b32520cd507bab6465a08b97541607db50a1"><code>coinbase</code></a>
+<li><a href="/query/block?address=1c11aa45c792e202e9ffdc2f12f99d0d209bef70"><code>address</code></a>
+<li><a href="/query/block?hash=58b3ed866c3498b778b62f070cd6894f1976375c09c9581fe842a25d22d14d8e"><code>hash</code></a>
+
+<h3 id="account"><code>/query/account?</code></h3>
+
+<li><a href="/query/account?balance=213"><code>balance</code></a>, <a href="/query/account?maxbalance=213"><code>maxbalance</code></a>, <a href="/query/account?minbalance=213"><code>minbalance</code></a>
+
+<li><a href="/query/account?nonce=213"><code>nonce</code></a>, <a href="/query/account?maxnonce=213"><code>maxnonce</code></a>, <a href="/query/account?minnonce=213"><code>minnonce</code></a>
+
+<li><a href="/query/account?address=1c11aa45c792e202e9ffdc2f12f99d0d209bef70"><code>address</code></a>
+    
+<h3 id="transaction"><code>/query/transaction?</code></h3>
+
+Note that <code>blocks</code> come with a <code>next</code> field that contains the index for the next 100 results.
+
+<li><a href="/query/transaction?from=1c11aa45c792e202e9ffdc2f12f99d0d209bef70"><code>from</code></a>, <a href="/query/transaction?to=1c11aa45c792e202e9ffdc2f12f99d0d209bef70"><code>to</code></a>, <a href="/query/transaction?address=1c11aa45c792e202e9ffdc2f12f99d0d209bef70"><code>address</code></a>
+
+<li><a href="/query/transaction?value=0"><code>value</code></a>, <a href="/query/transaction?maxvalue=213"><code>maxvalue</code></a>, <a href="/query/transaction?minvalue=213"><code>minvalue</code></a>
+
+<li><a href="/query/transaction?gasprice=10000000000000"><code>gasprice</code></a>, <a href="/query/transaction?maxgasprice=213"><code>maxgasprice</code></a>, <a href="/query/transaction?mingasprice=213"><code>mingasprice</code></a>
+
+<li><a href="/query/transaction?gaslimit=3000000"><code>gaslimit</code></a>, <a href="/query/transaction?maxgaslimit=30000000"><code>maxgaslimit</code></a>, <a href="/query/transaction?mingaslimit=213"><code>mingaslimit</code></a>
+
+<li><a href="/query/transaction?blocknumber=22973"><code>blocknumber</code></a>
+
+<h2> Types of transactions
+
+<h3> FunctionCall
+
+If <code>toAddress == Null</code> and <code>len(code) > 0</code> we have a <code>FunctionCall</code>.
+
+<h3> Contract
+
+If <code>toAddress != Null</code> and <code>len(code) >= 0</code> we have a <code>Contract</code>.
+
+<h3> Transaction
+
+If <code>toAddress != Null</code> and <code>len(code) == 0</code> we have a <code>Transaction</code>.

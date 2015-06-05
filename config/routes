@@ -1,6 +1,5 @@
 /static StaticR Static appStatic
 
-
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
@@ -11,25 +10,40 @@
 /address-explorer.css AddressExplorerCSSR GET
 /includetransaction/pushtx.js PushTransactionR GET
 
--- /query/transaction TransactionInfoR GET
+/index.html DemoR GET
+/help.html HelpR GET
+/testreport.html TestR GET
+
+/query/queued/ QueuedTransactionsR GET
+/includetransaction IncludeTransactionR POST OPTIONS
+
 /query/block BlockInfoR GET
-/query/account AccountInfoR GET
--- /query/transaction/hash/#Integer TxHashR GET
-/query/block/number/#Integer BlkNumberR GET
+/query/block/number/#Integer/ BlkNumberR GET
 /query/block/gas/#Integer BlkGasR GET
 /query/block/gasrange/lower/#Integer/upper/#Integer BlkGasRangeR GET
+/query/block/gasrange/lower/#Integer/upper/#Integer/#Integer BlkGasRangeR' GET
 /query/block/numberrange/lower/#Integer/upper/#Integer BlkNumberRangeR GET
-/query/block/timerange/lower/#UTCTime/upper/#UTCTime BlkTimeRangeR GET
+/query/block/numberrange/lower/#Integer/upper/#Integer/#Integer BlkNumberRangeR' GET
+-- /query/block/timerange/lower/#UTCTime/upper/#UTCTime BlkTimeRangeR GET
 /query/block/blockid/#Integer BlkIdR GET
 /query/block/coinbase/#Text BlkCoinbaseR GET
-/query/account/address/#Text AccAddressR GET
-/query/account/nonce/#Integer AccNonceR GET
-/query/account/balance/#Integer AccBalanceR GET
-/query/transaction/address/#Text TxAddressR GET
+/query/block/coinbase/#Text/#Integer BlkCoinbaseR' GET
+/query/block/coinbasenum/#Text BlkCoinbaseNumR GET
 /query/block/difficulty/#Integer BlkDifficultyR GET
 /query/block/hash/#Text BlkHashR GET
 /query/block/last/#Integer BlkLastR GET
 /query/block/txaddress/#Text BlkTxAddressR GET
-/query/queued/ QueuedTransactionsR GET
-/index.html DemoR GET
-/includetransaction IncludeTransactionR POST OPTIONS
+/query/block/txaddress/#Text/#Integer BlkTxAddressR' GET
+
+/query/account AccountInfoR GET
+
+/query/account/address/#Text AccAddressR GET
+/query/account/address/#Text/#Integer AccAddressR' GET
+/query/account/nonce/#Integer AccNonceR GET
+/query/account/balance/#Integer AccBalanceR GET
+
+/query/transaction TransactionInfoR GET
+/query/transaction/address/#Text TxAddressR GET
+/query/transaction/address/#Text/#Integer TxAddressR' GET
+/query/transaction/last/ TxLastR GET
+/query/transaction/last/#Integer TxLastR' GET

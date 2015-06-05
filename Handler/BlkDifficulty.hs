@@ -26,4 +26,4 @@ getBlkDifficultyR d      =      do addHeader "Access-Control-Allow-Origin" "*"
                                         E.orderBy [E.desc (a E.^. BlockDataRefNumber)]
                                         E.limit $ fetchLimit
                                         return t
-                                   returnJson $ nub $ P.map bToBPrime (P.map entityVal (blks :: [Entity Block])) -- consider removing nub - it takes time n^{2}
+                                   returnJson $ nub $ P.map bToBPrime' (P.map entityVal (blks :: [Entity Block])) -- consider removing nub - it takes time n^{2}

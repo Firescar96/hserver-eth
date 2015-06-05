@@ -23,12 +23,24 @@ import qualified Database.Esqueleto as E
 import Handler.JsonJuggler
 
 -- Parses addresses from hex      
-getTxAddressR :: Text -> Handler Value
-getTxAddressR address = do
+getTxAddressR t = (getTxAddressR' t 0)
+
+getTxAddressR' :: Text -> Integer -> Handler Value
+getTxAddressR' address offset = do
                            addHeader "Access-Control-Allow-Origin" "*"
-                           addr <- runDB $ selectList ( [ (RawTransactionFromAddress ==. (Address wd160)) ]
-                                                        ||. [ RawTransactionToAddress ==. (Just (Address wd160)) ] )
-                                   [ LimitTo (fromIntegral $ fetchLimit :: Int), Desc RawTransactionNonce  ] :: Handler [Entity RawTransaction]
-                           returnJson $ P.map rtToRtPrime (P.map entityVal (addr :: [Entity RawTransaction]))
+                           tx <- runDB $ E.select $
+                                 E.from $ \rawTX -> do
+                                 E.where_ (
+                                    ((rawTX E.^. RawTransactionFromAddress E.==. E.val (Address wd160)))
+                                    E.||. 
+                                    (rawTX E.^. RawTransactionToAddress E.==. E.val (Just (Address wd160)))
+                                    )
+                                 E.limit $ limit
+                                 E.offset $ (limit * off)
+                                 E.orderBy [E.desc (rawTX E.^. RawTransactionNonce)]  
+                                 return rawTX
+                           returnJson $ P.map rtToRtPrime' (P.map entityVal (tx :: [Entity RawTransaction]))
                          where
                            ((wd160, _):_) = readHex $ T.unpack $ address ::  [(Word160,String)]
+                           limit = (fromIntegral $ fetchLimit :: Int64)
+                           off = (fromIntegral $ offset :: Int64)
