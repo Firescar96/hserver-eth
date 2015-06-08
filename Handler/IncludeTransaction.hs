@@ -36,8 +36,7 @@ postIncludeTransactionR :: Handler ()
 postIncludeTransactionR = do
    addHeader "Access-Control-Allow-Origin" "*"
    addHeader "Access-Control-Allow-Headers" "Content-Type"
-   addHeader "Access-Control-Allow-Methods" "POST"
-   addHeader "Access-Control-Allow-Methods" "OPTIONS"
+   addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
    tx <- parseJsonBody :: Handler (Result RawTransaction')
    case tx of
        (Success (RawTransaction' raw "")) -> do
@@ -55,6 +54,5 @@ optionsIncludeTransactionR :: Handler RepPlain
 optionsIncludeTransactionR = do
   addHeader "Access-Control-Allow-Origin" "*"
   addHeader "Access-Control-Allow-Headers" "Content-Type"
-  addHeader "Access-Control-Allow-Methods" "POST"
-  addHeader "Access-Control-Allow-Methods" "OPTIONS"
+  addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
   return $ RepPlain $ toContent ("" :: Text)
