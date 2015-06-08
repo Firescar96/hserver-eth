@@ -19,7 +19,7 @@ import Database.Persist
 import Database.Persist.TH
 import Database.Persist.Postgresql
 
-import Data.ByteString as B
+import qualified Data.ByteString as B
 
 import Handler.JsonJuggler
 
@@ -36,19 +36,25 @@ postIncludeTransactionR :: Handler ()
 postIncludeTransactionR = do
    addHeader "Access-Control-Allow-Origin" "*"
    addHeader "Access-Control-Allow-Headers" "Content-Type"
-   addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
+   addHeader "Access-Control-Allow-Methods" "POST"
+   addHeader "Access-Control-Allow-Methods" "OPTIONS"
    tx <- parseJsonBody :: Handler (Result RawTransaction')
    case tx of
        (Success (RawTransaction' raw "")) -> do
                 _ <- runDB $ insert $ raw
-                return ()
+                let h = toJSON (rawTransactionTxHash raw)
+                case h of
+                  (String h') ->
+                    sendResponseStatus status200 (("/query/transaction?hash=" ++ h') :: Text)
+                    
        (Error msg) -> do
-                liftIO $ Import.putStrLn $ T.pack $ msg
-                return ()                               
+--                liftIO $ Import.putStrLn $ T.pack $ msg
+                sendResponseStatus status404  ("Could not parse" :: Text)
 
 optionsIncludeTransactionR :: Handler RepPlain
 optionsIncludeTransactionR = do
   addHeader "Access-Control-Allow-Origin" "*"
   addHeader "Access-Control-Allow-Headers" "Content-Type"
-  addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
+  addHeader "Access-Control-Allow-Methods" "POST"
+  addHeader "Access-Control-Allow-Methods" "OPTIONS"
   return $ RepPlain $ toContent ("" :: Text)
