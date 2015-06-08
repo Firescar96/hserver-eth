@@ -60,6 +60,12 @@ import Handler.Filters
 getAccountInfoR :: Handler Value
 getAccountInfoR = do
                  getParameters <- reqGetParams <$> getRequest
+                 
+                 appNameMaybe <- lookupGetParam "appname"
+                 case appNameMaybe of
+                     (Just t) -> liftIO $ putStrLn $ t
+                     (Nothing) -> liftIO $ putStrLn "anon"
+
 
                  let offset = (fromIntegral $ (maybe 0 id $ extractPage "page" getParameters)  :: Int64)
                  let index = (fromIntegral $ (maybe 0 id $ extractPage "index" getParameters)  :: Integer)

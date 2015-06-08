@@ -7,6 +7,7 @@
            , TypeFamilies
            , UndecidableInstances
            , GADTs
+           , OverloadedStrings
  #-}
 
 module Handler.BlockInfo where
@@ -70,7 +71,12 @@ blockIdRef (a, t) = (a E.^. BlockDataRefBlockId E.==. t E.^. BlockId)
 getBlockInfoR :: Handler Value
 getBlockInfoR = do
                    getParameters <- reqGetParams <$> getRequest
-                   
+
+                   appNameMaybe <- lookupGetParam "appname"
+                   case appNameMaybe of
+                     (Just t) -> liftIO $ putStrLn $ t
+                     (Nothing) -> liftIO $ putStrLn "anon"
+                     
                    let offset = (fromIntegral $ (maybe 0 id $ extractPage "page" getParameters)  :: Int64)
                    let index  = (fromIntegral $ (maybe 0 id $ extractPage "index" getParameters)  :: Integer)
                    let raw    = (fromIntegral $ (maybe 0 id $ extractPage "raw" getParameters) :: Integer) > 0
