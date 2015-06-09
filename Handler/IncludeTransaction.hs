@@ -54,8 +54,6 @@ optionsIncludeTransactionR :: Handler RepPlain
 optionsIncludeTransactionR = do
   addHeader "Access-Control-Allow-Origin" "*"
   addHeader "Access-Control-Allow-Headers" "Content-Type"
-  addHeader "Access-Control-Allow-Headers" "POST"
-  addHeader "Access-Control-Allow-Headers" "X-PINGOTHER"
   addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
-  
+
   return $ RepPlain $ toContent ("" :: Text)
