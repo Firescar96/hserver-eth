@@ -35,7 +35,7 @@ import qualified Data.Text as T
 postIncludeTransactionR :: Handler ()
 postIncludeTransactionR = do
    addHeader "Access-Control-Allow-Origin" "*"
-   addHeader "Access-Control-Allow-Headers" "Content-Type"
+   addHeader "Access-Control-Allow-Headers" "*"
    addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
    tx <- parseJsonBody :: Handler (Result RawTransaction')
    case tx of
@@ -53,6 +53,6 @@ postIncludeTransactionR = do
 optionsIncludeTransactionR :: Handler RepPlain
 optionsIncludeTransactionR = do
   addHeader "Access-Control-Allow-Origin" "*"
-  addHeader "Access-Control-Allow-Headers" "Content-Type"
+  addHeader "Access-Control-Allow-Headers" "*"
   addHeader "Access-Control-Allow-Methods" "POST, OPTIONS"
   return $ RepPlain $ toContent ("" :: Text)
