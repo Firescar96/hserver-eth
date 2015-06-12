@@ -212,9 +212,9 @@ bdrToBdrPrime x = BlockDataRef' x
 data AddressStateRef' = AddressStateRef' AddressStateRef deriving (Eq, Show)
 
 instance ToJSON AddressStateRef' where
-    toJSON (AddressStateRef' (AddressStateRef a@(Address x) n b cr ch)) = 
+    toJSON (AddressStateRef' (AddressStateRef a@(Address x) n b cr c bId bNum)) = 
         object ["kind" .= ("AddressStateRef" :: String), "address" .= (showHex x ""), "nonce" .= n, "balance" .= show b, 
-        "contractRoot" .= cr, "codeHash" .= ch]
+        "contractRoot" .= cr, "code" .= c]
 
 asrToAsrPrime :: AddressStateRef -> AddressStateRef'
 asrToAsrPrime x = AddressStateRef' x
