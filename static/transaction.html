@@ -1,0 +1,27 @@
+
+<html>
+  <head>
+    <script src="http://stablenet.blockapps.net/includetransaction/pushtx.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <script>
+      function submitTransaction() {
+        var nonce = 0;
+        var gasPrice = 100000;
+        var gasLimit = 1000000;
+        var data = 'abcdddee';
+        var privateKey = 'e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109';
+        var url = 'http://stablenet.blockapps.net/includetransaction';
+        var value =  0;
+      
+        api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
+
+        alert("after pushTX");
+      }
+    </script>
+  
+  </head>
+  <body>
+    <button onclick="submitTransaction()">Press here to submit transaction</button>
+  </body>
+</html>
