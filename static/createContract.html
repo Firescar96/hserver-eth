@@ -1,0 +1,72 @@
+
+<html>
+  <head>
+
+    <style>
+      div {
+        //border: 1px black solid;
+        display: inline-block;
+      }
+
+      textarea {
+        width: 35%;
+        height: 80%;
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+    </style>
+
+    <script src="http://stablenet.blockapps.net/includetransaction/pushtx.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <script>
+      function submitTransaction() {
+        alert('submitting transactions not function yet');
+        var nonce = 0;
+        var gasPrice = 100000;
+        var gasLimit = 1000000;
+        var data = 'abcdddee';
+        var privateKey = '1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281';
+        var url = 'http://stablenet.blockapps.net/includetransaction';
+        var value =  0;
+      
+        api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
+
+        alert("after pushTX");
+      }
+
+      function compile() {
+        //alert('compiling');
+        var oReq = new XMLHttpRequest();
+        oReq.open("POST", "/solc", true);
+
+        var params = "src=" + input.value;
+        oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //oReq.setRequestHeader("Content-length", params.length);
+        //oReq.setRequestHeader("Connection", "close");
+
+        oReq.onload = function () { 
+          if(oReq.readyState == 4 && oReq.status == 200) {
+            output.value = this.responseText; 
+          }
+          else {
+            output.value = "ERROR!\n" + this.responseText; 
+          }
+        }
+
+        oReq.send(params);
+      }
+
+    </script>
+  
+  </head>
+  <body>
+    <h1>Type your Solidity source code in below</h1>
+    <textarea id="input" onchange="compile();" onkeyup="compile()"></textarea>
+    <textarea id="output" style="border: 0px;" readonly="true"></textarea>
+    <button onclick="submitTransaction()">Press here to submit transaction</button>
+  </body>
+</html>
