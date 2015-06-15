@@ -6,6 +6,8 @@
 / HomeR GET POST
 /query/ QueryR GET
 
+/solc SolcR POST
+
 /address-explorer.js AddressExplorerR GET
 /address-explorer.css AddressExplorerCSSR GET
 /includetransaction/pushtx.js PushTransactionR GET

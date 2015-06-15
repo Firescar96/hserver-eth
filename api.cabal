@@ -51,6 +51,7 @@ library
                      Handler.IncludeTransaction,
                      Handler.QueuedTransactions,
                      Handler.PushTransaction
+                     Handler.CommandLine
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -119,6 +120,7 @@ library
                  , transformers
                  , postgresql-simple
                  , postgresql-libpq
+                 , process
 
 executable         api
     if flag(library-only)
