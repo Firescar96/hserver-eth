@@ -49,3 +49,5 @@
 /query/transaction/address/#Text/#Integer TxAddressR' GET
 /query/transaction/last/ TxLastR GET
 /query/transaction/last/#Integer TxLastR' GET
+
+/query/storage StorageInfoR GET

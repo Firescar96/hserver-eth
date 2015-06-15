@@ -10,7 +10,6 @@ var utils = Ethereum.utils;
 
 exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,url)  {
  // need to add url default arg
- console.log('does it get this far');
     
  var tx = new Transaction();
 
@@ -63,6 +62,14 @@ exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,
  var xhr = new XMLHttpRequest();
  xhr.open("POST", url, true);
  xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');   
+
+
+ xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+	console.log(xhr.responseText);
+    }
+ }
+
  xhr.send(JSON.stringify(js));
 }
 

@@ -7,6 +7,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 
 import Data.Aeson
+import Data.Binary as Bin
 import qualified Data.ByteString.Lazy as BS
 import Data.ByteString.Base16 as B16
 import Database.Persist
@@ -123,7 +124,29 @@ getTransFilter (rawTx)     ("maxvalue", v)     = rawTx E.^. RawTransactionValue 
 getTransFilter (rawTx)     ("blockid", v)      = rawTx E.^. RawTransactionBlockId E.==. E.val (toBlockId v)
 getTransFilter (rawTx)     ("blocknumber", v)  = rawTx E.^. RawTransactionBlockNumber E.==. E.val (P.read $ T.unpack v :: Int)
 
+getStorageFilter :: (E.Esqueleto query expr backend) => (expr (Entity Storage))-> (Text, Text) -> expr (E.Value Bool)
+getStorageFilter _ ("page",_)  = E.val True
+getStorageFilter _ ("index",_) = E.val True
+getStorageFilter (storage) ("key", v)
+  = storage E.^. StorageKey E.==. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
+getStorageFilter (storage) ("minkey", v)
+  = storage E.^. StorageKey E.>=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256) 
+getStorageFilter (storage) ("maxkey", v)
+  = storage E.^. StorageKey E.<=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
+getStorageFilter (storage) ("keystring", v)
+  = storage E.^. StorageKey E.==. E.val (Bin.decode $ BS.fromStrict $ T.encodeUtf8 v :: Word256)
+getStorageFilter (storage) ("value", v)
+  = storage E.^. StorageValue E.==. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
+getStorageFilter (storage) ("minvalue", v)
+  = storage E.^. StorageValue E.>=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
+getStorageFilter (storage) ("maxvalue", v)
+  = storage E.^. StorageValue E.<=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
+getStorageFilter (storage) ("valuestring", v)
+  = storage E.^. StorageValue E.==. E.val (Bin.decode $ BS.fromStrict $ T.encodeUtf8 v :: Word256)
+getStorageFilter (storage) ("addressid", v)
+  = storage E.^. StorageAddressStateRefId E.==. E.val (toAddrId v)
 
+toAddrId = toBlockId
 toBlockId v = toSqlKey (fromIntegral $ (P.read $ T.unpack v :: Integer) )
 
 toAddr v = Address wd160
