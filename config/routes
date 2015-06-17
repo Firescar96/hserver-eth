@@ -51,3 +51,6 @@
 /query/transaction/last/#Integer TxLastR' GET
 
 /query/storage StorageInfoR GET
+
+
+/transactionResult/#SHA TransactionResultR GET

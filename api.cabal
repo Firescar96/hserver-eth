@@ -53,6 +53,7 @@ library
                      Handler.PushTransaction
                      Handler.CommandLine
                      Handler.StorageInfo
+                     Handler.TransactionResult
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

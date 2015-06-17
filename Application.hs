@@ -74,6 +74,7 @@ import Handler.QueuedTransactions
 import Handler.PushTransaction
 import Handler.CommandLine
 import Handler.StorageInfo
+import Handler.TransactionResult
 
 import Debug.Trace
 debug = flip trace

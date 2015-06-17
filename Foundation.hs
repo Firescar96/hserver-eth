@@ -20,6 +20,8 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Prelude as P
 
+import Blockchain.SHA
+
 import Data.Maybe
 
 import Blockchain.Data.PersistTypes
@@ -27,6 +29,13 @@ import Blockchain.Data.PersistTypes
 import Debug.Trace
 debug = flip trace
 
+instance PathPiece SHA where
+  toPathPiece = T.pack . show
+  fromPathPiece t = 
+    case readHex $ T.unpack t of
+      [(x, "")] -> Just $ SHA x
+      _ -> Nothing
+  
 timeFormat = "%Y-%m-%dT%T.%q"
 
 stringToDate :: Text -> UTCTime
