@@ -155,7 +155,8 @@ exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,
 
  xhr.onreadystatechange = function() {
     if (xhr.readyState == 4) {
-    console.log(xhr.responseText);
+	console.log(xhr.responseText);
+	return xhr.responseText;
     }
  }
 
