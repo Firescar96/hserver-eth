@@ -19,21 +19,25 @@
 
     </style>
 
-    <script src="http://stablenet.blockapps.net/includetransaction/pushtx.js"></script>
+    <script src="/includetransaction/pushtx.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
     <script>
-      function submitTransaction() {
+      function submitTransaction(theData) {
         alert('submitting transactions not function yet');
         var nonce = 0;
         var gasPrice = 100000;
         var gasLimit = 1000000;
-        var data = 'abcdddee';
+        var data = theData;
         var privateKey = '1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281';
-        var url = 'http://stablenet.blockapps.net/includetransaction';
+        var url = '/includetransaction';
         var value =  0;
       
-        api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
+        tx = api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
+      
+        alert(tx);
+
+        window.setInterval("checkResult(" + ")", milliseconds);
 
         alert("after pushTX");
       }
@@ -67,6 +71,6 @@
     <h1>Type your Solidity source code in below</h1>
     <textarea id="input" onchange="compile();" onkeyup="compile()"></textarea>
     <textarea id="output" style="border: 0px;" readonly="true"></textarea>
-    <button onclick="submitTransaction()">Press here to submit transaction</button>
+    <button onclick="submitTransaction(output.value.replace(/(.|\s)*Binary:/m, '').replace(/\s/g, ''))">Press here to submit transaction</button>
   </body>
 </html>
