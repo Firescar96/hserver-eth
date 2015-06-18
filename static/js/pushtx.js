@@ -27,7 +27,7 @@ exports.functionNameToData = function(abi, functionName, args) {
   return dataHex;
 }
 
-exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,url)  {
+exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,url,f)  {
  // need to add url default arg
     
  var tx = new Transaction();
@@ -85,6 +85,7 @@ exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,
 
  xhr.onreadystatechange = function() {
     if (xhr.readyState == 4) {
+	f(xhr.responseText);
 	console.log(xhr.responseText);
     }
  }
