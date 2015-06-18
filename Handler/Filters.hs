@@ -35,30 +35,30 @@ import Data.Set
 import Import
 
 getBlkFilter :: (E.Esqueleto query expr backend) => (expr (Entity BlockDataRef), expr (Entity AddressStateRef), expr (Entity RawTransaction), expr (Entity Block))-> (Text, Text) -> expr (E.Value Bool)
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("page", v)    = E.val True 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("index", v)    = E.val True 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("raw", v)    = E.val True 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("next", v)    = E.val True
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("prev", v)    = E.val True
+getBlkFilter  _                               ("page", v)    = E.val True 
+getBlkFilter  _                               ("index", v)    = E.val True 
+getBlkFilter  _                               ("raw", v)    = E.val True 
+getBlkFilter  _                               ("next", v)    = E.val True
+getBlkFilter  _                               ("prev", v)    = E.val True
 getBlkFilter  _                               ("appname", v) = E.val True
 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("ntx", v)    = bdRef E.^. BlockDataRefNumber E.==. E.val (P.read $ T.unpack v :: Integer)
+getBlkFilter (bdRef, _, _, _)                 ("ntx", v)    = bdRef E.^. BlockDataRefNumber E.==. E.val (P.read $ T.unpack v :: Integer)
 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("number", v)    = bdRef E.^. BlockDataRefNumber E.==. E.val (P.read $ T.unpack v :: Integer)
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("minnumber", v)    = bdRef E.^. BlockDataRefNumber E.>=. E.val (P.read $ T.unpack v :: Integer)
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("maxnumber", v)    = bdRef E.^. BlockDataRefNumber E.<=. E.val (P.read $ T.unpack v :: Integer)
+getBlkFilter (bdRef, _, _, _)                 ("number", v)    = bdRef E.^. BlockDataRefNumber E.==. E.val (P.read $ T.unpack v :: Integer)
+getBlkFilter (bdRef, _, _, _)                 ("minnumber", v)    = bdRef E.^. BlockDataRefNumber E.>=. E.val (P.read $ T.unpack v :: Integer)
+getBlkFilter (bdRef, _, _, _)                 ("maxnumber", v)    = bdRef E.^. BlockDataRefNumber E.<=. E.val (P.read $ T.unpack v :: Integer)
 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("gaslim", v)    = bdRef E.^. BlockDataRefGasLimit E.==. E.val (P.read $ T.unpack v :: Integer) 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("mingaslim", v) = bdRef E.^. BlockDataRefGasLimit E.>=. E.val (P.read $ T.unpack v :: Integer) 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("maxgaslim", v) = bdRef E.^. BlockDataRefGasLimit E.<=. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("gaslim", v)    = bdRef E.^. BlockDataRefGasLimit E.==. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("mingaslim", v) = bdRef E.^. BlockDataRefGasLimit E.>=. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("maxgaslim", v) = bdRef E.^. BlockDataRefGasLimit E.<=. E.val (P.read $ T.unpack v :: Integer) 
 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("gasused", v)    = bdRef E.^. BlockDataRefGasUsed E.==. E.val (P.read $ T.unpack v :: Integer) 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("mingasused", v) = bdRef E.^. BlockDataRefGasUsed E.>=. E.val (P.read $ T.unpack v :: Integer) 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("maxgasused", v) = bdRef E.^. BlockDataRefGasUsed E.<=. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("gasused", v)    = bdRef E.^. BlockDataRefGasUsed E.==. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("mingasused", v) = bdRef E.^. BlockDataRefGasUsed E.>=. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("maxgasused", v) = bdRef E.^. BlockDataRefGasUsed E.<=. E.val (P.read $ T.unpack v :: Integer) 
 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("diff", v)      = bdRef E.^. BlockDataRefDifficulty E.==. E.val (P.read $ T.unpack v :: Integer) 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("mindiff", v)   = bdRef E.^. BlockDataRefDifficulty E.>=. E.val (P.read $ T.unpack v :: Integer) 
-getBlkFilter (bdRef, accStateRef, rawTX, blk) ("maxdiff", v)   = bdRef E.^. BlockDataRefDifficulty E.<=. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("diff", v)      = bdRef E.^. BlockDataRefDifficulty E.==. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("mindiff", v)   = bdRef E.^. BlockDataRefDifficulty E.>=. E.val (P.read $ T.unpack v :: Integer) 
+getBlkFilter (bdRef, _, _, _)                 ("maxdiff", v)   = bdRef E.^. BlockDataRefDifficulty E.<=. E.val (P.read $ T.unpack v :: Integer) 
 
 -- getBlkFilter (bdRef, accStateRef, rawTX, blk) ("time", v)      = bdRef E.^. BlockDataRefTimestamp E.==. E.val (stringToDate v)
 -- getBlkFilter (bdRef, accStateRef, rawTX, blk) ("mintime", v)   = bdRef E.^. BlockDataRefTimestamp E.>=. E.val (stringToDate v)
@@ -124,27 +124,30 @@ getTransFilter (rawTx)     ("maxvalue", v)     = rawTx E.^. RawTransactionValue 
 getTransFilter (rawTx)     ("blockid", v)      = rawTx E.^. RawTransactionBlockId E.==. E.val (toBlockId v)
 getTransFilter (rawTx)     ("blocknumber", v)  = rawTx E.^. RawTransactionBlockNumber E.==. E.val (P.read $ T.unpack v :: Int)
 
-getStorageFilter :: (E.Esqueleto query expr backend) => (expr (Entity Storage))-> (Text, Text) -> expr (E.Value Bool)
+getStorageFilter :: (E.Esqueleto query expr backend) => (expr (Entity Storage), expr (Entity AddressStateRef)) -> (Text, Text) -> expr (E.Value Bool)
 getStorageFilter _ ("page",_)  = E.val True
 getStorageFilter _ ("index",_) = E.val True
-getStorageFilter (storage) ("key", v)
+getStorageFilter (storage,_) ("key", v)
   = storage E.^. StorageKey E.==. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
-getStorageFilter (storage) ("minkey", v)
+getStorageFilter (storage,_) ("minkey", v)
   = storage E.^. StorageKey E.>=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256) 
-getStorageFilter (storage) ("maxkey", v)
+getStorageFilter (storage,_) ("maxkey", v)
   = storage E.^. StorageKey E.<=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
-getStorageFilter (storage) ("keystring", v)
+getStorageFilter (storage,_) ("keystring", v)
   = storage E.^. StorageKey E.==. E.val (Bin.decode $ BS.fromStrict $ T.encodeUtf8 v :: Word256)
-getStorageFilter (storage) ("value", v)
+getStorageFilter (storage,_) ("value", v)
   = storage E.^. StorageValue E.==. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
-getStorageFilter (storage) ("minvalue", v)
+getStorageFilter (storage,_) ("minvalue", v)
   = storage E.^. StorageValue E.>=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
-getStorageFilter (storage) ("maxvalue", v)
+getStorageFilter (storage,_) ("maxvalue", v)
   = storage E.^. StorageValue E.<=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
-getStorageFilter (storage) ("valuestring", v)
+getStorageFilter (storage,_) ("valuestring", v)
   = storage E.^. StorageValue E.==. E.val (Bin.decode $ BS.fromStrict $ T.encodeUtf8 v :: Word256)
-getStorageFilter (storage) ("addressid", v)
+getStorageFilter (storage,_) ("addressid", v)
   = storage E.^. StorageAddressStateRefId E.==. E.val (toAddrId v)
+getStorageFilter (_,addrStRef) ("address", v)      -- Note: a join is done in StorageInfo
+  = addrStRef E.^. AddressStateRefAddress E.==. E.val (toAddr v)  
+
 
 toAddrId = toBlockId
 toBlockId v = toSqlKey (fromIntegral $ (P.read $ T.unpack v :: Integer) )

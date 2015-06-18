@@ -77,9 +77,11 @@ getStorageInfoR = do
                  addHeader "Access-Control-Allow-Origin" "*"
 
                  addrs <- runDB $ E.selectDistinct $
-                                        E.from $ \(storage) -> do
+                                        E.from $ \(storage `E.InnerJoin` addrStRef) -> do
                         
-                                        E.where_ ((P.foldl1 (E.&&.) $ P.map (getStorageFilter (storage)) $ getParameters ))
+                                        E.on ( storage E.^. StorageAddressStateRefId E.==. addrStRef E.^. AddressStateRefId )                                        
+
+                                        E.where_ ((P.foldl1 (E.&&.) $ P.map (getStorageFilter (storage,addrStRef)) $ getParameters ))
 
                                         E.offset $ (limit * offset)
                                         E.limit $ limit
