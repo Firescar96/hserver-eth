@@ -23,8 +23,32 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
     <script>
+
+      function checkResults(response) {
+        var x = response.replace(/.*=/, "");
+        //window.setInterval("checkResult(" + ")", 1000);
+
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", "/transactionResult/" + x, true);
+        oReq.onload = function () { 
+          if(oReq.readyState == 4 && oReq.status == 200) {
+            var i, responseText = "";
+            var response = JSON.parse(this.responseText); 
+            for(i = 0; i < response.length; i++) {
+              responseText = responseText + response[i].message + "\n";
+            }
+            output.value = responseText;
+          }
+          else {
+            output.value = "ERROR!\n" + this.responseText; 
+          }
+        }
+        oReq.send();
+
+
+      }
+
       function submitTransaction(theData) {
-        alert('submitting transactions not function yet');
         var nonce = 0;
         var gasPrice = 100000;
         var gasLimit = 1000000;
@@ -33,13 +57,8 @@
         var url = '/includetransaction';
         var value =  0;
       
-        tx = api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
+        api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url, checkResults);
       
-        alert(tx);
-
-        window.setInterval("checkResult(" + ")", milliseconds);
-
-        alert("after pushTX");
       }
 
       function compile() {
@@ -69,8 +88,11 @@
   </head>
   <body>
     <h1>Type your Solidity source code in below</h1>
-    <textarea id="input" onchange="compile();" onkeyup="compile()"></textarea>
+    <textarea id="input" onchange="compile();" onkeyup="compile()">
+    contract qq { }
+    </textarea>
     <textarea id="output" style="border: 0px;" readonly="true"></textarea>
     <button onclick="submitTransaction(output.value.replace(/(.|\s)*Binary:/m, '').replace(/\s/g, ''))">Press here to submit transaction</button>
+    <script>compile();</script>
   </body>
 </html>
