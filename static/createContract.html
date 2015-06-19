@@ -5,7 +5,7 @@
     <style>
       div {
         //border: 1px black solid;
-        display: inline-block;
+        //display: inline-block;
       }
 
       textarea {
@@ -49,15 +49,14 @@
       }
 
       function submitTransaction(theData) {
-        var nonce = 0;
-        var gasPrice = 100000;
-        var gasLimit = 1000000;
-        var data = theData;
         var privateKey = '1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281';
         var url = '/includetransaction';
         var value =  0;
       
-        api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url, checkResults);
+        api.pushTX(parseInt(nonce.value), 
+                   parseInt(gasPrice.value),
+	           parseInt(gasLimit.value), 
+                   undefined,value,theData,privateKey,url, checkResults);
       
       }
 
@@ -83,16 +82,64 @@
         oReq.send(params);
       }
 
+      function loadAccountInfo() {
+	address.value = ''
+	address.value = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", "/query/account?address=" + address.value, true);
+        oReq.onload = function () { 
+          if(oReq.readyState == 4 && oReq.status == 200) {
+	    var responseJSON = JSON.parse(this.responseText);
+            if (responseJSON.length >= 1) {
+	      nonce.value = responseJSON[responseJSON.length - 1].nonce;
+	      if (responseJSON.length > 1) alert("error! too many values in account query, just using the last value.");
+	    }
+	    else nonce.value = "0";
+          }
+          else { //returned an error, but no biggie, could just be a malformed form item, etc.
+            //output.value = "ERROR in fetching address info!\n" + this.responseText; 
+          }
+        }
+
+        oReq.send();
+      }
+
     </script>
   
   </head>
   <body>
     <h1>Type your Solidity source code in below</h1>
-    <textarea id="input" onchange="compile();" onkeyup="compile()">
-    contract qq { }
-    </textarea>
-    <textarea id="output" style="border: 0px;" readonly="true"></textarea>
+    <div style="width: 100%">
+      <textarea id="input" onchange="compile();" onkeyup="compile()">
+	contract qq { }
+      </textarea>
+      <textarea id="output" style="border: 0px;" readonly="true"></textarea>
+    </div>
+    <label for="prvkey">Private Key:</label>
+    <input id="prvkey" style="width: 300px;" 
+	   value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"
+	   onkeyup="loadAccountInfo();" /><br>
+    <input id="address" style="width: 300px;" />
     <button onclick="submitTransaction(output.value.replace(/(.|\s)*Binary:/m, '').replace(/\s/g, ''))">Press here to submit transaction</button>
+    <details>
+      <summary>Advanced Options</summary>
+      <table style="border: solid; width: 400px; ">
+	<tr>
+	  <td style="text-align: right;"><label for="gasLimit">Gas Limit:</label></td>
+	  <td><input id="gasLimit" value="1000000" style="width: 300px;" /></td>
+	</tr>
+	<tr>
+	  <td style="text-align: right;"><label for="nonce">Gas Price:</label></td>
+	  <td><input id="gasPrice" value="100000" style="width: 300px" /></td>
+	</tr>
+	<tr>
+	  <td style="text-align: right;"><label for="nonce">Nonce:</label></td>
+	  <td><input id="nonce" value="0" style="width: 300px" /></td>
+	</tr>
+      </table>
+    </details>
+    
+    
     <script>compile();</script>
   </body>
 </html>
