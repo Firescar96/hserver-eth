@@ -27,7 +27,18 @@ exports.functionNameToData = function(abi, functionName, args) {
   return dataHex;
 }
 
-exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,url,f)  {
+// assume that key and index are 32 byte hex strings
+exports.keyIndexToLookup = function(key,index) {
+  var words = CryptoJS.enc.Hex.parse(key.concat(index));
+  return CryptoJS.SHA3(words, { outputLength: 256}).toString(CryptoJS.enc.Hex);
+}
+
+exports.arrayIndexToLookup = function(index) {
+  var words = CryptoJS.enc.Hex.parse(index);
+  return CryptoJS.SHA3(words, { outputLength: 256}).toString(CryptoJS.enc.Hex);
+}
+
+exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,url)  {
  // need to add url default arg
     
  var tx = new Transaction();
@@ -85,11 +96,6 @@ exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,
 
  xhr.onreadystatechange = function() {
     if (xhr.readyState == 4) {
-
-	if (typeof f !== 'undefined') {
- 	    f(xhr.responseText);
-	}
-
 	console.log(xhr.responseText);
     }
  }
