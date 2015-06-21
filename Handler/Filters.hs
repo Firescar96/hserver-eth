@@ -135,6 +135,8 @@ getStorageFilter (storage,_) ("maxkey", v)
   = storage E.^. StorageKey E.<=. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
 getStorageFilter (storage,_) ("keystring", v)
   = storage E.^. StorageKey E.==. E.val (Bin.decode $ BS.fromStrict $ T.encodeUtf8 v :: Word256)
+getStorageFilter (storage,_) ("keyhex", v)
+  = storage E.^. StorageKey E.==. E.val (fromHexText v)
 getStorageFilter (storage,_) ("value", v)
   = storage E.^. StorageValue E.==. E.val (P.fromIntegral (P.read $ T.unpack v :: Integer) :: Word256)
 getStorageFilter (storage,_) ("minvalue", v)
@@ -155,6 +157,9 @@ toBlockId v = toSqlKey (fromIntegral $ (P.read $ T.unpack v :: Integer) )
 toAddr v = Address wd160
   where ((wd160, _):_) = readHex $ T.unpack $ v ::  [(Word160,String)]
 
+fromHexText :: T.Text -> Word256
+fromHexText v = res 
+  where ((res,_):_) = readHex $ T.unpack $ v :: [(Word256,String)]
 
 extractPage :: String -> [(Text, Text)] ->  Maybe Integer 
 extractPage name ts = Control.Monad.foldM toFold 0 (P.map selectPage ts)
