@@ -27,6 +27,27 @@ exports.functionNameToData = function(abi, functionName, args) {
   return dataHex;
 }
 
+exports.loadVariableFromStorage = function(address, key, urlroot, callback) {
+ var xhr = new XMLHttpRequest();
+ var filters = "?address=".concat(address).concat("&keyhex=").concat(key);
+
+ var url = urlroot.concat(filters);
+
+ xhr.open("GET", url, true);
+
+ xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+
+	if (typeof callback !== 'undefined') {
+	        callback(xhr.responseText);
+	    }
+
+	console.log(xhr.responseText);
+    }
+ }
+
+ xhr.send();
+}
 // assume that key and index are 32 byte hex strings
 exports.keyIndexToLookup = function(key,index) {
   var words = CryptoJS.enc.Hex.parse(key.concat(index));
@@ -38,7 +59,7 @@ exports.arrayIndexToLookup = function(index) {
   return CryptoJS.SHA3(words, { outputLength: 256}).toString(CryptoJS.enc.Hex);
 }
 
-exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,url)  {
+exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,url,f)  {
  // need to add url default arg
     
  var tx = new Transaction();
@@ -96,12 +117,18 @@ exports.pushTX  = function(nonce,gasPrice,gasLimit,toAddress,value,data,privKey,
 
  xhr.onreadystatechange = function() {
     if (xhr.readyState == 4) {
+
+	if (typeof f !== 'undefined') {
+	        f(xhr.responseText);
+	    }
+
 	console.log(xhr.responseText);
     }
  }
 
  xhr.send(JSON.stringify(js));
 }
+
 
 }).call(this,require("buffer").Buffer)
 },{"../index.js":2,"buffer":230,"crypto-js":34,"web3/lib/solidity/coder":221}],2:[function(require,module,exports){
