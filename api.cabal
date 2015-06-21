@@ -51,7 +51,7 @@ library
                      Handler.IncludeTransaction,
                      Handler.QueuedTransactions,
                      Handler.PushTransaction
-                     Handler.CommandLine
+                     Handler.Solc
                      Handler.StorageInfo
                      Handler.TransactionResult
 
@@ -87,6 +87,7 @@ library
                  , classy-prelude                >= 0.10.2
                  , classy-prelude-conduit        >= 0.10.2
                  , classy-prelude-yesod          >= 0.10.2
+                 , either
                  , bytestring                    >= 0.9        
                  , text                          >= 0.11       
                  , persistent                    >= 2.0        
@@ -124,6 +125,7 @@ library
                  , postgresql-simple
                  , postgresql-libpq
                  , process
+                 , parsec
 
 executable         api
     if flag(library-only)

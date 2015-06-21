@@ -85,6 +85,8 @@
 
     <script>
 
+      var compilerData = null;
+
       function checkResults(response) {
         var x = response.replace(/.*=/, "");
         //window.setInterval("checkResult(" + ")", 1000);
@@ -103,6 +105,7 @@
             output.value = responseText;
 	    alert('Transaction has been submitted successfully');
             loadAccountInfo();
+            //document.href = '/result.html';
           }
           else {
             output.value = "ERROR!\n" + this.responseText; 
@@ -113,7 +116,22 @@
 
       }
 
-      function submitTransaction(theData) {
+      function submitTransaction() {
+        if (compilerData.error) {
+          alert("You can't submit the contract until it has succesfully compiled");
+	  return;
+        }
+
+        if (compilerData.contracts.length == 0) {
+          alert("Error!  There is no contract to submit.");
+	  return;
+        }
+
+        if (compilerData.contracts.length != 1) {
+          alert("Sorry, submitting more than one contract not currently supported!");
+	  return;
+        }
+
 	spinnerBox.style.visibility = "visible";
         var url = '/includetransaction';
         var value =  0;
@@ -121,7 +139,8 @@
         api.pushTX(parseInt(nonce.value), 
                    parseInt(gasPrice.value),
 	           parseInt(gasLimit.value), 
-                   undefined,value,theData,
+                   undefined,value,
+	           compilerData.contracts[0].bin,
 		   prvkey.value,
 		   url, checkResults);
       
@@ -139,7 +158,20 @@
 
         oReq.onload = function () { 
           if(oReq.readyState == 4 && oReq.status == 200) {
-            output.value = this.responseText; 
+	    compilerData = JSON.parse(this.responseText);
+	    if (compilerData.error != null) {
+	      output.style.color = 'red';
+              submitButton.disabled = true;
+	      output.value = compilerData.error;
+	    }
+            else {
+	      output.style.color = 'black';
+              submitButton.disabled = false;
+	      if (compilerData.contracts.length == 0)
+	        output.value = "[Blank]";
+	      else
+	        output.value = "Compiled Binary:\n\n" + compilerData.contracts[0].bin; 
+	    }
           }
           else {
             output.value = "ERROR!\n" + this.responseText; 
@@ -210,7 +242,7 @@ contract contractName {
       </tr>
       <tr>
 	<td style="text-align: right;"></td>
-	<td style="text-align: right;"><button onclick="submitTransaction(output.value.replace(/(.|\s)*Binary:/m, '').replace(/\s/g, ''))">Press here to submit transaction</button></td>
+	<td style="text-align: right;"><button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button></td>
       </tr>
     </table>
 
