@@ -1,0 +1,30 @@
+      function submitTransaction() {
+       var nonce = parseInt(document.querySelector('[name="nonce"]').value);
+       var gasPrice = parseInt(document.querySelector('[name="gasPrice"]').value);
+       var gasLimit = parseInt(document.querySelector('[name="gasLimit"]').value);
+       var toAddress = document.querySelector('[name="to"]').value;
+       var value = parseInt(document.querySelector('[name="value"]').value);
+       var data = document.querySelector('[name="dataField"]').value;
+
+       var privateKey = document.querySelector('[name="privKey"]').value;
+      
+       var url = 'http://stablenet.blockapps.net/includetransaction';
+       var isHex = /^[0-9A-F]+$/i;
+
+       if (isHex.test(toAddress) && (toAddress != "0x0") && (toAddress != "0x00"))
+          api.pushTX(nonce,gasPrice,gasLimit,toAddress,value,data,privateKey,url);
+      else {
+          var str = api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
+          console.log(str);
+        }
+      }
+
+
+      function invokeFunction() {
+       var fName = document.querySelector('[name="funcName"]').value;
+       var jsonABI = JSON.parse(document.querySelector('[name="abi"]').value);
+       var jsonArgs = JSON.parse(document.querySelector('[name="args"]').value);
+
+       return api.functionNameToData(jsonABI, fName, jsonArgs);
+      }
+

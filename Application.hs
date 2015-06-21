@@ -73,6 +73,8 @@ import Handler.IncludeTransaction
 import Handler.QueuedTransactions
 import Handler.PushTransaction
 import Handler.Solc
+import Handler.AfterSubmission
+import Handler.TransactionDemo
 import Handler.StorageInfo
 import Handler.TransactionResult
 

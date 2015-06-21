@@ -27,7 +27,7 @@ getResponse val = do
   abis <- runSolc "json-abi" val
   compiled <- runSolc "binary" val
   return $ 
-    "{\"abi\": " ++ abisToJSON abis ++ ", \"contracts\": " ++ contractsToJSON compiled ++ "}"
+    "{\"abis\": " ++ abisToJSON abis ++ ", \"contracts\": " ++ contractsToJSON compiled ++ "}"
 
 
 postSolcR::Handler Text

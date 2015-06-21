@@ -1,0 +1,8 @@
+
+<h2>Congratulations, your contract has been submitted!
+<h1>#{contractAddress}
+<details>
+  <summary>View the ABI
+  <textarea>#{abi}
+
+<button onclick="launchDemo(abi)">Launch Demo

@@ -95,7 +95,6 @@
         oReq.open("GET", "/transactionResult/" + x, true);
         oReq.onload = function () { 
           if(oReq.readyState == 4 && oReq.status == 200) {
-//      alert('success ' + this.responseText);
             spinnerBox.style.visibility = 'hidden';
             var i, responseText = "";
             var response = JSON.parse(this.responseText); 
@@ -103,9 +102,26 @@
               responseText = responseText + response[i].message + "\n";
             }
             output.value = responseText;
-	    alert('Transaction has been submitted successfully');
+	    alert('Transaction has been submitted successfully!');
             loadAccountInfo();
-            //document.href = '/result.html';
+
+
+	    var form = document.createElement("form");
+            form.method = 'post';
+            form.action = '/afterSubmission.html'; 
+            var input = document.createElement('input');
+            input.type = "text";
+            input.name = "abi";
+            input.value = JSON.stringify(compilerData.abis[0].abi);
+
+            form.appendChild(input);
+            var input2 = document.createElement('input');
+            input2.type = "text";
+            input2.name = "contractAddress";
+            input2.value = util.generateAddress(address.value, parseInt(nonce.value)).toString('hex');
+            form.appendChild(input2);
+
+            form.submit();
           }
           else {
             output.value = "ERROR!\n" + this.responseText; 
