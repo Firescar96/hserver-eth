@@ -1,30 +1,33 @@
-<form action="">
-  <table>
-    <tr>
-      <td class="labelCell"><label for="nonce">Nonce:
-      <td><input type="number" id="nonce" name="nonce" value=0>
-    <tr>
-      <td class="labelCell"><label for="nonce">Gas Price:
-      <td><input type="number" id="gasPrice" name="gasPrice" value=100>
-    <tr>
-      <td class="labelCell"><label for="gasLimit">Gas Limit:
-      <td><input type="number" id="gasLimit" name="gasLimit" value=3141591>
-    <tr>
-      <td class="labelCell"><label for="dataField">Data:
-      <td><input type="number" id="dataField" name="dataField" value=0x00>
-    <tr>
-      <td class="labelCell"><label for="to">To Address:
-      <td><input type="number" id="to" name="to" value=#{contractAddress}>
-    <tr>
-      <td class="labelCell"><label for="value">Value:
-      <td><input type="number" id="value" name="value" value=0>
-    <tr>
-      <td class="labelCell"><label for="privKey">Private Key:
-      <td><input type="text" id="privKey" name="privKey" value=1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281><br>
 
-  <button onclick="submitTransaction()">Press here to submit transaction
+<details>
+  <summary>Advanced Options:
+  <form action="">
+     <table>
+       <tr>
+         <td class="labelCell"><label for="nonce">Nonce:
+         <td><input type="number" id="nonce" name="nonce" value=0>
+       <tr>
+         <td class="labelCell"><label for="nonce">Gas Price:
+         <td><input type="number" id="gasPrice" name="gasPrice" value=100>
+       <tr>
+         <td class="labelCell"><label for="gasLimit">Gas Limit:
+         <td><input type="number" id="gasLimit" name="gasLimit" value=3141591>
+       <tr>
+         <td class="labelCell"><label for="dataField">Data:
+         <td><input type="number" id="dataField" name="dataField" value=0x00>
+       <tr>
+         <td class="labelCell"><label for="to">To Address:
+         <td><input type="number" id="to" name="to" value=#{contractAddress}>
+       <tr>
+         <td class="labelCell"><label for="value">Value:
+         <td><input type="number" id="value" name="value" value=0>
+       <tr>
+         <td class="labelCell"><label for="privKey">Private Key:
+         <td><input type="text" id="privKey" name="privKey" value=1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281><br>
+
+<button onclick="submitTransaction()">Press here to submit transaction
     
-  <p>Transactions fall into two basic types. Message transactions transfer
+<p>Transactions fall into two basic types. Message transactions transfer
        value and data and can invoke contracts. Contract creation transactions
        register code on the blockchain, to later be invoked by messages.
 
@@ -33,7 +36,7 @@
        associated with it, you should write it in one of Ethereum's high level languages,
        compile it, and include the compiled hex as the data field.
 
-  <p>Transactions require numerous fields, which have meanings that aren't always obvious.
+<p>Transactions require numerous fields, which have meanings that aren't always obvious.
        A transaction is a signed message, originating from an address. The address is an
        160 bit integer associated with the public key of the signer. The nonce is a piece of
        data associated with that address, indicating how many transactions that address has
@@ -49,18 +52,18 @@
        computational work. A computation is metered by the gas price, up to a maximum total expenditure
        of the gas limit.
 
-  <p>Message Transactions sent to an address come with a data payload and some Ether (value).
+<p>Message Transactions sent to an address come with a data payload and some Ether (value).
        If the to field of the message contains a contract, that contract is automatically invoked
        on the data. 
 
-  <p>
+<p>
       Function invocation is slightly tricky. Take the ABI output from the solidity compiler,
       and supply the function name and a list of arguments, and the data payload for the transaction
       will appear in the data field. You still need to provide the destination address.
 
-  <button onclick="dataField.value=invokeFunction()">Prepare Function Invocation
+<button onclick="dataField.value=invokeFunction()">Prepare Function Invocation
 
-  <form action="">
+<form action="">
       Function Name: <input type="text" name="funcName" value="register"><br>
       ABI: 
       <textarea name="abi" style="font-size: 20px;">#{abi}
