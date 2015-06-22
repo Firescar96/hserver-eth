@@ -3,7 +3,7 @@
       Gas Price: <input type="number" name="gasPrice" value=100><br>
       Gas Limit: <input type="number" name="gasLimit" value=3141591><br>
       Data: <input type="text" name="dataField" id="dataField" value=0x00><br>
-      To Address: <input type="text" name="to" value=0x0><br>
+      To Address: <input type="text" name="to" value=#{contractAddress}><br>
       Value: <input type="number" name="value" value=0><br>
       Private Key: <input type="text" name="privKey" value=1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281><br>
 

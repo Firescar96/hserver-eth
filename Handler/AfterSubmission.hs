@@ -19,8 +19,7 @@ postAfterSubmissionR = do
     (Nothing, _) -> invalidArgs ["Missing 'abi'"]
     (_, Nothing) -> invalidArgs ["Missing 'contractAddress'"]
     (Just abi, Just contractAddress) -> defaultLayout $ do
-      setTitle "File Processor"
-      addScriptRemote "/static/js/afterSubmission.js"
+      setTitle "Contract Submitted"
       $(widgetFile "afterSubmission")
 
 

@@ -1,3 +1,7 @@
+
+var abi=#{rawJS abi}
+var contractAddress=#{rawJS contractAddress}
+
       function submitTransaction() {
        var nonce = parseInt(document.querySelector('[name="nonce"]').value);
        var gasPrice = parseInt(document.querySelector('[name="gasPrice"]').value);
