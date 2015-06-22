@@ -20,7 +20,6 @@ function submitPost(url, params) {
 }
 
 function launchDemo(abi) {
-alert("blah: " + contractAddress);
     submitPost("/transactionDemo.html", {"abi": abi, "contractAddress": contractAddress});
 }
 

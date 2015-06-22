@@ -17,7 +17,7 @@ postTransactionDemoR = do
     (Nothing, _) -> invalidArgs ["Missing 'abi'"]
     (_, Nothing) -> invalidArgs ["Missing 'contractAddress'"]
     (Just abi, Just contractAddress) -> defaultLayout $ do
-      liftIO $ putStrLn $ "contractAddress: " ++ contractAddress
+      addScriptRemote "/static/js/pushtx.js"
   
       setTitle "Transaction Demo"
       $(widgetFile "transactionDemo")

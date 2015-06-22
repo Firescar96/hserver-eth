@@ -14,10 +14,10 @@
          <td><input type="number" id="gasLimit" name="gasLimit" value=3141591>
        <tr>
          <td class="labelCell"><label for="dataField">Data:
-         <td><input type="number" id="dataField" name="dataField" value=0x00>
+         <td><input type="text" id="dataField" name="dataField" value=0x00>
        <tr>
          <td class="labelCell"><label for="to">To Address:
-         <td><input type="number" id="to" name="to" value=#{contractAddress}>
+         <td><input type="text" id="to" name="to" value=#{contractAddress}>
        <tr>
          <td class="labelCell"><label for="value">Value:
          <td><input type="number" id="value" name="value" value=0>
