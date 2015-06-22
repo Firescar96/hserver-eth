@@ -4,6 +4,8 @@ module Handler.AfterSubmission where
 
 import qualified Data.Text as T
 
+import Text.Julius
+
 import Import
 import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3,
                               withSmallInput)
