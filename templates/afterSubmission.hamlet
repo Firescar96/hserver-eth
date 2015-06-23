@@ -1,8 +1,17 @@
 
-<h2>Congratulations, your contract has been submitted!
-<h1>#{contractAddress}
-<details>
-  <summary>View the ABI
-  <textarea>#{abi}
+<h1>Your contract has been submitted!
+<table>
+  <tr><td>This is the address of the contract: #{contractAddress}
+  <tr><td>
+    Result of submission: 
+    <textarea id="result" class="output" readonly>
+  <tr><td>
+    <details>
+      <summary>View details
+      <textarea id="details" class="output" readonly>
+  <tr><td>
+    <details>
+      <summary>View the ABI
+      <textarea>#{abi}
 
-<button onclick="launchDemo(abi)">Launch Demo
+  <tr><td><button onclick="launchDemo(abi)">Launch Demo

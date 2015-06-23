@@ -1,0 +1,16 @@
+
+html
+  height: 100%
+
+body
+  background: -webkit-linear-gradient(left top, grey, white)
+  background: -o-linear-gradient(bottom right, grey, white)
+  background: -moz-linear-gradient(bottom right, grey, white)
+  background: linear-gradient(to bottom right, grey, white)
+  height: 100%
+  margin: 0
+  background-repeat: no-repeat
+  background-attachment: fixed
+
+.output
+  width: 400px

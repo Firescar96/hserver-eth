@@ -113,13 +113,19 @@
             input.type = "text";
             input.name = "abi";
             input.value = JSON.stringify(compilerData.abis[0].abi);
-
             form.appendChild(input);
+
             var input2 = document.createElement('input');
             input2.type = "text";
             input2.name = "contractAddress";
             input2.value = util.generateAddress(address.value, parseInt(nonce.value)).toString('hex');
             form.appendChild(input2);
+
+            var input3 = document.createElement('input');
+            input3.type = "text";
+            input3.name = "transactionHash";
+            input3.value = x;
+            form.appendChild(input3);
 
             form.submit();
           }
