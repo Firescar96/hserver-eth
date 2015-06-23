@@ -21,8 +21,7 @@ calculateLookup()
         if (isHex.test(toAddress) && (toAddress != "0x0") && (toAddress != "0x00"))
            api.pushTX(nonce,gasPrice,gasLimit,toAddress,value,data,privateKey,url);
         else {
-          var str = api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
-          console.log(str);
+           api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
         }
         loadAccountInfo();
       }
@@ -39,7 +38,7 @@ calculateLookup()
       function calculateLookup() {
          switch (lookupType[lookupType.selectedIndex].value) {
             case 'elem':
-               console.log("elem stuff here");
+               calculateLookupElementary();
                break;
 
             case 'map':
@@ -66,6 +65,11 @@ calculateLookup()
       function calculateLookupMap() {
          var ikey=api.keyIndexToLookup(key.value, index.value);
          api.loadVariableFromStorageKey(address.value, ikey, '/query/storage', 
+             function (res) { lookup.value=res; });
+      }
+
+      function calculateLookupElementary() {
+         api.loadVariableFromStorageKey(address.value, index.value, '/query/storage', 
              function (res) { lookup.value=res; });
       }
 
