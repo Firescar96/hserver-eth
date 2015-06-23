@@ -25,49 +25,76 @@
          <td class="labelCell"><label for="privKey">Private Key:
          <td><input type="text" id="privKey" name="privKey" value=1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281><br>
 
+
 <button onclick="submitTransaction()">Press here to submit transaction
     
-<p>Transactions fall into two basic types. Message transactions transfer
-       value and data and can invoke contracts. Contract creation transactions
-       register code on the blockchain, to later be invoked by messages.
-
-       For purposes of this tutorial, the meaningful difference is that contract creation
-       transactions lack a "To Address." If you'd like your contract to have executable code
-       associated with it, you should write it in one of Ethereum's high level languages,
-       compile it, and include the compiled hex as the data field.
-
-<p>Transactions require numerous fields, which have meanings that aren't always obvious.
-       A transaction is a signed message, originating from an address. The address is an
-       160 bit integer associated with the public key of the signer. The nonce is a piece of
-       data associated with that address, indicating how many transactions that address has
-       previously propagated. For your transaction to be accepted, you need to use the correct
-       nonce. We will explain later how to look that information up with our API.
-
-       The gas price and gas limit are data that reflect the cost of computation on the blockchain.
-       As is the case for Bitcoin, every Ethereum participant must process every valid transaction
-       sent to the network. As transactions can contain executable code, there must be a means of
-       limiting the total amount of computation a particular transaction imposes on the network.
-
-       Ethereum solves this problem by introducing the notion of gas. Gas is meant as a unit of
-       computational work. A computation is metered by the gas price, up to a maximum total expenditure
-       of the gas limit.
-
-<p>Message Transactions sent to an address come with a data payload and some Ether (value).
-       If the to field of the message contains a contract, that contract is automatically invoked
-       on the data. 
-
 <p>
-      Function invocation is slightly tricky. Take the ABI output from the solidity compiler,
-      and supply the function name and a list of arguments, and the data payload for the transaction
-      will appear in the data field. You still need to provide the destination address.
+      Function invocation is slightly tricky. We've pre-loaded the ABI output from the solidity compiler for you. 
+      Input the function name and a list of arguments, then click below to have the data payload for the transaction appear in the (possibly hidden) data field. You can then submit the transaction.
 
 <button onclick="dataField.value=invokeFunction()">Prepare Function Invocation
 
+    
+<p>
+      Function invocation is slightly tricky. We've pre-loaded the ABI output from the solidity compiler for you. 
+      Input the function name and a list of arguments, then click below to have the data payload for the transacti      on appear in the (possibly hidden) data field. You can then submit the transaction.
+
 <form action="">
-      Function Name: <input type="text" name="funcName" value="register"><br>
-      ABI: 
-      <textarea name="abi" style="font-size: 20px;">#{abi}
-      <br>      
-      Arguments: 
-      <textarea name="args" style="font-size: 20px;"> [123] 
-      <br>
+  <table>
+    <tr>
+      <td class="labelCell"><label for="register">Function Name:
+      <td><input type="text" id="funcName" name="funcName" value="register">
+    <tr>
+      <td class="labelCell"><label for="args">Args:
+      <td><input type="text" name="args" id="args" value=[123]><br>
+    <tr>
+      <td class="labelCell"><label for="args">ABI:
+      <td><textarea readonly name="ABI" id="ABI" style="width: 100%; height: 100%; border: none; font-size: 20px;">#{abi}</textarea><br>
+
+<p> 
+   By now you've submitted a contract and invoked one of its methods. How can you see the result of your contracts operation? You can query its storage. At present, this requires 
+   <ul>
+     <li> knowing which variable you are interested in, including its type, 
+     <li> knowing its position in the solidity program (starting from zero). 
+
+   All storage is shown, by default.
+
+   Elementary variables are numbered from zero on up. Try it below - see the index field.
+   
+   Map lookups require you to additionally input the key, in hex. The default values below will work
+   if you register [123] with the demo contract.
+
+   If you want to simulate the functionality of a solidity getter, look at sample contract from the
+   contract submission page. Having registered a key, call getOwner after that. You should see the return
+   value at index 0 of elementary storage.
+ 
+   You'll see the result of the getter in storage as an elementary type, associated with storage key
+   zero.
+
+   Of course this is possible by just looking the function up in the map. 
+      
+   
+<select id="lookupType">
+  <option value="all">All Storage
+  <option value="elem">Elementary Variable
+  <option value="map">Map
+  <option value="array">Array<br>
+
+<button id="lookupButton" onclick="calculateLookup()">Lookup<br>
+
+<form action="">
+  <table>
+    <tr>
+      <td class="labelCell"><label for="key">Key:
+      <td><textarea name="key" id="key" style="width: 100%; height: 100%; border: none; font-size: 20px;">000000000000000000000000000000000000000000000000000000000000007B</textarea>
+    <tr>
+      <td class="labelCell"><label for="index">Index:
+      <td><textarea name="index" id="index" style="width: 100%; height: 100%; border: none; font-size: 20px;">0000000000000000000000000000000000000000000000000000000000000002</textarea>
+    <tr>
+      <td class="labelCell"><label for="address">Address:
+      <td><textarea name="address" id="address" style="width: 100%; height: 100%; border: none; font-size: 20px;">#{contractAddress}</textarea><br>
+    <tr>
+       <td class="labelCell"><label for="lookup">Storage:
+       <td><textarea name="lookup" id="lookup" style="width: 100%; height: 100%; border: none; font-size: 20px;">0000000000000000000000000000000000000000000000000000000000000000</textarea><br>
+    
+

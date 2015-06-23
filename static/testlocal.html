@@ -1,0 +1,96 @@
+<html>
+  <body>
+    <script src="js/pushtx.js"></script>
+    
+    <form action="">
+      Nonce: <input type="number" name="nonce" value=0><br>
+      Gas Price: <input type="number" name="gasPrice" value=100><br>
+      Gas Limit: <input type="number" name="gasLimit" value=3141591><br>
+      Data: <input type="text" name="dataField" id="dataField" value=0x00><br>
+      To Address: <input type="text" name="to" value=0x0><br>
+      Value: <input type="number" name="value" value=0><br>
+      Private Key: <input type="text" name="privKey" value=1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281><br>
+      
+    </form>
+
+    <script>
+      function submitTransaction() {
+       var nonce = parseInt(document.querySelector('[name="nonce"]').value);
+       var gasPrice = parseInt(document.querySelector('[name="gasPrice"]').value);
+       var gasLimit = parseInt(document.querySelector('[name="gasLimit"]').value);
+       var toAddress = document.querySelector('[name="to"]').value;
+       var value = parseInt(document.querySelector('[name="value"]').value);
+       var data = document.querySelector('[name="dataField"]').value;
+
+       var privateKey = document.querySelector('[name="privKey"]').value;
+      
+       var url = 'http://stablenet.blockapps.net/includetransaction';
+       var isHex = /^[0-9A-F]+$/i;
+
+       if (isHex.test(toAddress) && (toAddress != "0x0") && (toAddress != "0x00"))
+          api.pushTX(nonce,gasPrice,gasLimit,toAddress,value,data,privateKey,url);
+      else {
+          var str = api.pushTX(nonce,gasPrice,gasLimit,undefined,value,data,privateKey,url);
+          console.log(str);
+        }
+      }
+    </script>
+
+    <button onclick="submitTransaction()">Press here to submit transaction</button>
+    
+    <p>Transactions fall into two basic types. Message transactions transfer
+       value and data and can invoke contracts. Contract creation transactions
+       register code on the blockchain, to later be invoked by messages.
+
+       For purposes of this tutorial, the meaningful difference is that contract creation
+       transactions lack a "To Address." If you'd like your contract to have executable code
+       associated with it, you should write it in one of Ethereum's high level languages,
+       compile it, and include the compiled hex as the data field. </p>
+
+    <p>Transactions require numerous fields, which have meanings that aren't always obvious.
+       A transaction is a signed message, originating from an address. The address is an
+       160 bit integer associated with the public key of the signer. The nonce is a piece of
+       data associated with that address, indicating how many transactions that address has
+       previously propagated. For your transaction to be accepted, you need to use the correct
+       nonce. We will explain later how to look that information up with our API.
+
+       The gas price and gas limit are data that reflect the cost of computation on the blockchain.
+       As is the case for Bitcoin, every Ethereum participant must process every valid transaction
+       sent to the network. As transactions can contain executable code, there must be a means of
+       limiting the total amount of computation a particular transaction imposes on the network.
+
+       Ethereum solves this problem by introducing the notion of gas. Gas is meant as a unit of
+       computational work. A computation is metered by the gas price, up to a maximum total expenditure
+       of the gas limit.
+    </p>
+
+    <p>Message Transactions sent to an address come with a data payload and some Ether (value).
+       If the to field of the message contains a contract, that contract is automatically invoked
+       on the data. 
+    </p>
+
+    <p>
+      Function invocation is slightly tricky. Take the ABI output from the solidity compiler,
+      and supply the function name and a list of arguments, and the data payload for the transaction
+      will appear in the data field. You still need to provide the destination address.
+    </p> 
+
+   <script>
+      function invokeFunction() {
+       var fName = document.querySelector('[name="funcName"]').value;
+       var jsonABI = JSON.parse(document.querySelector('[name="abi"]').value);
+       var jsonArgs = JSON.parse(document.querySelector('[name="args"]').value);
+
+       return api.functionNameToData(jsonABI, fName, jsonArgs);
+      }
+    </script>
+
+    <button onclick="dataField.value=invokeFunction()">Prepare Function Invocation</button>
+
+    <form action="">
+      Function Name: <input type="text" name="funcName" value="register"><br>
+      ABI: <textarea name="abi" style="font-size: 20px;">[{"constant":true,"inputs":[{"name":"key","type":"uint256"}],"name":"getValue","outputs":[{"name":"value","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"key","type":"uint256"},{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"key","type":"uint256"},{"name":"newValue","type":"uint256"}],"name":"setValue","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"key","type":"uint256"}],"name":"getOwner","outputs":[{"name":"owner","type":"address"}],"type":"function"},{"constant":false,"inputs":[{"name":"key","type":"uint256"}],"name":"register","outputs":[],"type":"function"}]</textarea><br>
+      Arguments: <textarea name="args" style="font-size: 20px;"> [123] </textarea><br>
+    </form>
+  </body>
+</html>
