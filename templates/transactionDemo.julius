@@ -3,6 +3,7 @@ var abi=#{rawJS abi}
 var contractAddress="#{rawJS contractAddress}"
 loadAccountInfo()
 calculateLookup()
+switchLookup()
 
       function submitTransaction() {
         loadAccountInfo();
@@ -34,7 +35,7 @@ calculateLookup()
 
          return api.functionNameToData(jsonABI, fName, jsonArgs);
       }
-
+  
       function calculateLookup() {
          switch (lookupType[lookupType.selectedIndex].value) {
             case 'elem':
@@ -57,6 +58,36 @@ calculateLookup()
          }         
       }
 
+    function switchLookup() {
+         switch (lookupType[lookupType.selectedIndex].value) {
+            case 'elem':
+               key.style.display = "none";
+               index.style.display = "block";
+               break;
+
+            case 'map':
+               key.style.display = "block";
+               index.style.display = "block";
+               calculateLookupMap();
+               break;
+
+            case 'array':
+               key.style.display = "none";
+               index.style.display = "block";
+               calculateLookupArray();
+               break;           
+
+            case 'all':
+               key.style.display = "none";
+               index.style.display = "none";
+               calculateLookupAll();
+               break;
+ 
+            default:
+               console.log("other");
+         }         
+      }
+
       function calculateLookupAll() {
          api.loadVariableFromStorage(address.value, '/query/storage', 
              function (res) { lookup.value=res; });
@@ -64,6 +95,12 @@ calculateLookup()
 
       function calculateLookupMap() {
          var ikey=api.keyIndexToLookup(key.value, index.value);
+         api.loadVariableFromStorageKey(address.value, ikey, '/query/storage', 
+             function (res) { lookup.value=res; });
+      }
+
+      function calculateLookupArray() {
+         var ikey=api.arrayIndexToLookup(index.value);
          api.loadVariableFromStorageKey(address.value, ikey, '/query/storage', 
              function (res) { lookup.value=res; });
       }

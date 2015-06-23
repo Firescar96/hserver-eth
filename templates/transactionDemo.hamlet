@@ -34,11 +34,6 @@
 
 <button onclick="dataField.value=invokeFunction()">Prepare Function Invocation
 
-    
-<p>
-      Function invocation is slightly tricky. We've pre-loaded the ABI output from the solidity compiler for you. 
-      Input the function name and a list of arguments, then click below to have the data payload for the transacti      on appear in the (possibly hidden) data field. You can then submit the transaction.
-
 <form action="">
   <table>
     <tr>
@@ -62,19 +57,19 @@
    Elementary variables are numbered from zero on up. Try it below - see the index field.
    
    Map lookups require you to additionally input the key, in hex. The default values below will work
-   if you register [123] with the demo contract.
+   if you register [123] with the demo contract (0x7B = 123 is the key, index is 2).
 
    If you want to simulate the functionality of a solidity getter, look at sample contract from the
    contract submission page. Having registered a key, call getOwner after that. You should see the return
    value at index 0 of elementary storage.
  
    You'll see the result of the getter in storage as an elementary type, associated with storage key
-   zero.
+   zero, or, confusingly, solidity program index zero.
 
    Of course this is possible by just looking the function up in the map. 
       
    
-<select id="lookupType">
+<select id="lookupType" onchange="switchLookup()">
   <option value="all">All Storage
   <option value="elem">Elementary Variable
   <option value="map">Map
@@ -85,10 +80,10 @@
 <form action="">
   <table>
     <tr>
-      <td class="labelCell"><label for="key">Key:
+      <td class="labelCell"><label for="key">Key (for maps):
       <td><textarea name="key" id="key" style="width: 100%; height: 100%; border: none; font-size: 20px;">000000000000000000000000000000000000000000000000000000000000007B</textarea>
     <tr>
-      <td class="labelCell"><label for="index">Index:
+      <td class="labelCell"><label for="index">Index (pos. in sol. program):
       <td><textarea name="index" id="index" style="width: 100%; height: 100%; border: none; font-size: 20px;">0000000000000000000000000000000000000000000000000000000000000002</textarea>
     <tr>
       <td class="labelCell"><label for="address">Address:
