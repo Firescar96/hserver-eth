@@ -13,7 +13,7 @@ module Application
     ) where
 
 import Blockchain.Data.DataDefs
-import Control.Monad.Logger                 (liftLoc, runLoggingT, runStderrLoggingT, 
+import Control.Monad.Logger                 (liftLoc, runLoggingT, runStderrLoggingT,
                                               runStdoutLoggingT, runNoLoggingT)
 import Database.Persist.Postgresql          (createPostgresqlPool, pgConnStr,
                                              pgPoolSize, runSqlPool)
@@ -117,7 +117,7 @@ makeFoundation appSettings = do
 
     -- Perform database migration using our application's logging settings.
     --runLoggingT (runSqlPool (runMigration migrateAll) pool) logFunc
-    myLogger (runSqlPool (runMigrationSilent migrateAll) pool) --runMigration
+    _ <- myLogger (runSqlPool (runMigrationSilent migrateAll) pool) --runMigration
 
     -- Return the foundation
     return $ mkFoundation pool
@@ -129,7 +129,7 @@ noPool :: PG.Connection -> IO ()
 noPool = const $ return ()
 
 prePool :: PG.Connection -> IO ()
-prePool conn = withConnection conn $ const $ do 
+prePool conn = withConnection conn $ const $ do
                             --id <- PQ.backendPID
                             liftIO $ traceIO $ "hello"
                             return ()

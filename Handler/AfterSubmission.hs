@@ -7,8 +7,6 @@ import qualified Data.Text as T
 import Text.Julius
 
 import Import
-import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3,
-                              withSmallInput)
 
 postAfterSubmissionR::Handler Html
 postAfterSubmissionR = do
@@ -23,5 +21,3 @@ postAfterSubmissionR = do
     (Just abi, Just contractAddress, Just transactionHash) -> defaultLayout $ do
       setTitle "Contract Submitted"
       $(widgetFile "afterSubmission")
-
-
