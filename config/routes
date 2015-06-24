@@ -11,12 +11,14 @@
 /address-explorer.js AddressExplorerR GET
 /address-explorer.css AddressExplorerCSSR GET
 /includetransaction/pushtx.js PushTransactionR GET
+/ethlightjs.min.js WalletJSR GET
 
 /index.html DemoR GET
 /help.html HelpR GET
 /testreport.html TestR GET
 /afterSubmission.html AfterSubmissionR POST
 /transactionDemo.html TransactionDemoR POST
+/example_web.html WalletHtmlR GET
 
 /query/queued/ QueuedTransactionsR GET
 /includetransaction IncludeTransactionR POST OPTIONS
