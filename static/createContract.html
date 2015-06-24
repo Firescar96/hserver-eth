@@ -251,7 +251,7 @@
 
 	      //address.value = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
         var oReq = new XMLHttpRequest();
-        oReq.open("GET", "/query/account?address=" + address.value, true);
+        oReq.open("GET", "/query/account?address=" + address, true);
         oReq.onload = function () { 
           if(oReq.readyState == 4 && oReq.status == 200) {
 	    invalidPrvKeyWarning.style.visibility="hidden";
