@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <style>
@@ -9,7 +8,7 @@
     body {
       background-color: #13223c;
       font: impact;
-      color: rgba(255, 255, 255, 0.4);;
+      color: rgba(255, 255, 255, 0.4);
     }
 
     .error {
@@ -84,12 +83,15 @@
 
     #submitButton{
       color: #fff;
-      background: #3cb5b5;
-      border-color: #3cb5b5;
+      background: #337ab7;
+      border-color: #337ab7;
+      display: block;
       padding: 0 1.5rem;
       letter-spacing: 0.3px;
       font-family: "Raleway", sans-serif;
       font-weight: 700;
+      margin-left: auto;
+      margin-right: auto;
       margin-bottom: 1rem;
       text-align: center;
       font-size: 11px;
@@ -133,7 +135,7 @@
       width: 30%;
       display: inline-block;
       float: left;
-      overflow: hidden;
+      word-wrap: break-word;
     }
 
     #address,#nonce {
@@ -360,10 +362,8 @@
         onkeyup="loadAccountInfo();" />
       <p id="invalidPrvKeyWarning" class="error">Invalid Private Key</p>
       </br>
-      <label for="address">
-        <span>Address:</span>
-        <p id="address"> </p>
-      </label>
+      <label for="address">Address:</label>
+      <p id="address"> </p>
       <button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button>
       <details>
         <summary>Advanced Options</summary>
