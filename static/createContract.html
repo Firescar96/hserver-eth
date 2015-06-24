@@ -190,7 +190,7 @@
           var input2 = document.createElement('input');
           input2.type = "text";
           input2.name = "contractAddress";
-          input2.value = util.generateAddress(address.value, parseInt(nonce.innerHTML.value)).toString('hex');
+          input2.value = util.generateAddress(address.value, parseInt(nonce.value)).toString('hex');
           form.appendChild(input2);
 
           var input3 = document.createElement('input');
@@ -230,7 +230,7 @@
       var url = '/includetransaction';
       var value =  0;
 
-      api.pushTX(parseInt(nonce.innerHTML),
+      api.pushTX(parseInt(nonce.value),
       parseInt(gasPrice.value),
       parseInt(gasLimit.value),
       undefined,value,
@@ -276,24 +276,24 @@
     }
 
     function loadAccountInfo() {
-      address.innerHTML = ''
+      address.value = ''
       if (!prvkey.value.match(/^[a-f0-9]{64}$/i)) {
         invalidPrvKeyWarning.style.visibility="visible";
         return;
       }
 
-      address.innerHTML = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
+      address.value = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
       var oReq = new XMLHttpRequest();
-      oReq.open("GET", "/query/account?address=" + address.innerHTML, true);
+      oReq.open("GET", "/query/account?address=" + address.value, true);
       oReq.onload = function () {
         if(oReq.readyState == 4 && oReq.status == 200) {
           invalidPrvKeyWarning.style.visibility="hidden";
           var responseJSON = JSON.parse(this.responseText);
           if (responseJSON.length >= 1) {
-            nonce.innerHTML = responseJSON[responseJSON.length - 1].nonce;
+            nonce.value = responseJSON[responseJSON.length - 1].nonce;
             if (responseJSON.length > 1) alert("error! too many values in account query, just using the last value.");
           }
-          else nonce.innerHTML = "0";
+          else nonce.value = "0";
         }
         else { //returned an error, but no biggie, could just be a malformed form item, etc.
           //output.value = "ERROR in fetching address info!\n" + this.responseText;
