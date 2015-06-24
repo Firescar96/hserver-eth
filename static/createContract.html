@@ -1,82 +1,152 @@
 
 <html>
   <head>
-
     <style>
-      body {
-        background: -webkit-linear-gradient(left top, grey, white);
-        background: -o-linear-gradient(bottom right, grey, white);
-        background: -moz-linear-gradient(bottom right, grey, white);
-        background: linear-gradient(to bottom right, grey, white);
-        font: impact;
-      }
+    .text-right {
+        text-align: right;
+    }
 
-      div {
-        //border: 1px black solid;
-        //display: inline-block;
-      }
+    body {
+      background-color: #13223c;
+      font: impact;
+      color: rgba(255, 255, 255, 0.4);;
+    }
 
-      .error {
-        color:red;
-        display: inline-block;
-        visibility: hidden;
-      }
+    .error {
+      color:#e53b51;
+      display: inline-block;
+      visibility: hidden;
+    }
 
-      textarea {
-        width: 35%;
-        height: 60%;
-        display: inline-block;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-      }
+    .half-width {
+        width: 50%;
+        float: left;
+    }
 
-      .spinner {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        height:60px;
-        width:60px;
-        margin:0px auto;
-        -webkit-animation: rotation .6s infinite linear;
-        -moz-animation: rotation .6s infinite linear;
-        -o-animation: rotation .6s infinite linear;
-        animation: rotation .6s infinite linear;
-        border-left:6px solid rgba(0,174,239,.15);
-        border-right:6px solid rgba(0,174,239,.15);
-        border-bottom:6px solid rgba(0,174,239,.15);
-        border-top:6px solid rgba(0,174,239,.8);
-        border-radius:100%;
-        opacity: .5;
-      }
+    textarea {
+      width: 50%;
+      height: 60%;
+      display: inline-block;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
 
-      @-webkit-keyframes rotation {
-        from {-webkit-transform: rotate(0deg);}
-        to {-webkit-transform: rotate(359deg);}
-      }
-      @-moz-keyframes rotation {
-        from {-moz-transform: rotate(0deg);}
-        to {-moz-transform: rotate(359deg);}
-      }
-      @-o-keyframes rotation {
-        from {-o-transform: rotate(0deg);}
-        to {-o-transform: rotate(359deg);}
-      }
-      @keyframes rotation {
-        from {transform: rotate(0deg);}
-        to {transform: rotate(359deg);}
-      }
+    .spinner {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height:60px;
+      width:60px;
+      margin:0px auto;
+      -webkit-animation: rotation .6s infinite linear;
+      -moz-animation: rotation .6s infinite linear;
+      -o-animation: rotation .6s infinite linear;
+      animation: rotation .6s infinite linear;
+      border-left:6px solid rgba(0,174,239,.15);
+      border-right:6px solid rgba(0,174,239,.15);
+      border-bottom:6px solid rgba(0,174,239,.15);
+      border-top:6px solid rgba(0,174,239,.8);
+      border-radius:100%;
+      opacity: .5;
+    }
+
+    @-webkit-keyframes rotation {
+      from {-webkit-transform: rotate(0deg);}
+      to {-webkit-transform: rotate(359deg);}
+    }
+    @-moz-keyframes rotation {
+      from {-moz-transform: rotate(0deg);}
+      to {-moz-transform: rotate(359deg);}
+    }
+    @-o-keyframes rotation {
+      from {-o-transform: rotate(0deg);}
+      to {-o-transform: rotate(359deg);}
+    }
+    @keyframes rotation {
+      from {transform: rotate(0deg);}
+      to {transform: rotate(359deg);}
+    }
 
 
-      #spinnerBox {
-        visibility: hidden;
-        position: absolute; 
-        top:0; 
-        background-color: 
-        rgba(128,128,128,0.5); 
-        width: 100%; 
-        height: 100%;
-      }
+    #spinnerBox {
+      visibility: hidden;
+      position: absolute;
+      top:0;
+      background-color: #ffd600;
+      width: 100%;
+      height: 100%;
+    }
+
+    #nonce, #gasPrice, #gasLimit {
+      width: 300px;
+    }
+
+    #submitButton{
+      color: #fff;
+      background: #3cb5b5;
+      border-color: #3cb5b5;
+      padding: 0 1.5rem;
+      letter-spacing: 0.3px;
+      font-family: "Raleway", sans-serif;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-size: 11px;
+      line-height: 38px;
+      letter-spacing: .1rem;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-radius: 4px;
+    }
+
+    input {
+      color: #fff;
+      text-transform: lowercase;
+      margin: auto;
+      font-weight: bold;
+      width: 100%;
+      font-family: "Raleway", sans-serif;
+      font-size: 1.2rem;
+      background-color: #162744;
+      border: 0px;
+      border-bottom: solid 2px rgba(255, 255, 255, 0.4);
+      padding: 6px 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    #prvkey {
+      margin: 0px;
+    }
+
+    #container {
+      margin: 15px;
+    }
+
+    #solidity-compiler {
+      width: 70%;
+      display: inline-block;
+      float: left;
+    }
+
+    #account-info {
+      width: 30%;
+      display: inline-block;
+      float: left;
+      overflow: hidden;
+    }
+
+    #address,#nonce {
+      color: #ffd600;;
+      text-transform: lowercase;
+      margin: auto;
+      font-weight: bold;
+      width: 100%;
+      font-family: "Raleway", sans-serif;
+      font-size: 1.2rem;
+      padding: 6px 10px;
+      margin-bottom: 1.5rem;
+    }
 
     </style>
 
@@ -85,250 +155,246 @@
 
     <script>
 
-      var compilerData = null;
+    var compilerData = null;
 
-      function checkResults(response) {
-        var x = response.replace(/.*=/, "");
-        //window.setInterval("checkResult(" + ")", 1000);
+    function checkResults(response) {
+      var x = response.replace(/.*=/, "");
+      //window.setInterval("checkResult(" + ")", 1000);
 
-        var oReq = new XMLHttpRequest();
-        oReq.open("GET", "/transactionResult/" + x, true);
-        oReq.onload = function () { 
-          if(oReq.readyState == 4 && oReq.status == 200) {
-            spinnerBox.style.visibility = 'hidden';
-            var i, responseText = "";
-            var response = JSON.parse(this.responseText); 
-            for(i = 0; i < response.length; i++) {
-              responseText = responseText + response[i].message + "\n";
-            }
-            output.value = responseText;
-	    alert('Transaction has been submitted successfully!');
-            loadAccountInfo();
+      var oReq = new XMLHttpRequest();
+      oReq.open("GET", "/transactionResult/" + x, true);
+      oReq.onload = function () {
+        if(oReq.readyState == 4 && oReq.status == 200) {
+          spinnerBox.style.visibility = 'hidden';
+          var i, responseText = "";
+          var response = JSON.parse(this.responseText);
+          for(i = 0; i < response.length; i++) {
+            responseText = responseText + response[i].message + "\n";
+          }
+          output.value = responseText;
+          alert('Transaction has been submitted successfully!');
+          loadAccountInfo();
 
 
-	    var form = document.createElement("form");
-            form.method = 'post';
-            form.action = '/afterSubmission.html'; 
-            var input = document.createElement('input');
-            input.type = "text";
-            input.name = "abi";
-            input.value = JSON.stringify(compilerData.abis[0].abi);
-            form.appendChild(input);
+          var form = document.createElement("form");
+          form.method = 'post';
+          form.action = '/afterSubmission.html';
+          var input = document.createElement('input');
+          input.type = "text";
+          input.name = "abi";
+          input.value = JSON.stringify(compilerData.abis[0].abi);
+          form.appendChild(input);
 
-            var input2 = document.createElement('input');
-            input2.type = "text";
-            input2.name = "contractAddress";
-            input2.value = util.generateAddress(address.value, parseInt(nonce.value)).toString('hex');
-            form.appendChild(input2);
+          var input2 = document.createElement('input');
+          input2.type = "text";
+          input2.name = "contractAddress";
+          input2.value = util.generateAddress(address.value, parseInt(nonce.innerHTML.value)).toString('hex');
+          form.appendChild(input2);
 
-            var input3 = document.createElement('input');
-            input3.type = "text";
-            input3.name = "transactionHash";
-            input3.value = x;
-            form.appendChild(input3);
+          var input3 = document.createElement('input');
+          input3.type = "text";
+          input3.name = "transactionHash";
+          input3.value = x;
+          form.appendChild(input3);
 
-            form.submit();
+          form.submit();
+        }
+        else {
+          output.value = "ERROR!\n" + this.responseText;
+        }
+      }
+      oReq.send();
+
+
+    }
+
+    function submitTransaction() {
+      if (compilerData.error) {
+        alert("You can't submit the contract until it has succesfully compiled");
+        return;
+      }
+
+      if (compilerData.contracts.length == 0) {
+        alert("Error!  There is no contract to submit.");
+        return;
+      }
+
+      if (compilerData.contracts.length != 1) {
+        alert("Sorry, submitting more than one contract not currently supported!");
+        return;
+      }
+
+      spinnerBox.style.visibility = "visible";
+      var url = '/includetransaction';
+      var value =  0;
+
+      api.pushTX(parseInt(nonce.innerHTML),
+      parseInt(gasPrice.value),
+      parseInt(gasLimit.value),
+      undefined,value,
+      compilerData.contracts[0].bin,
+      prvkey.value,
+      url, checkResults);
+
+    }
+
+    function compile() {
+      //alert('compiling');
+      var oReq = new XMLHttpRequest();
+      oReq.open("POST", "/solc", true);
+
+      var params = "src=" + encodeURIComponent(input.value);
+      oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      //oReq.setRequestHeader("Content-length", params.length);
+      //oReq.setRequestHeader("Connection", "close");
+
+      oReq.onload = function () {
+        if(oReq.readyState == 4 && oReq.status == 200) {
+          compilerData = JSON.parse(this.responseText);
+          if (compilerData.error != null) {
+            output.style.color = 'red';
+            submitButton.disabled = true;
+            output.value = compilerData.error;
           }
           else {
-            output.value = "ERROR!\n" + this.responseText; 
+            output.style.color = 'black';
+            submitButton.disabled = false;
+            if (compilerData.contracts.length == 0)
+            output.value = "[Blank]";
+            else
+            output.value = "Compiled Binary:\n\n" + compilerData.contracts[0].bin;
           }
         }
-        oReq.send();
-
-
+        else {
+          output.value = "ERROR!\n" + this.responseText;
+        }
       }
 
-      function submitTransaction() {
-        if (compilerData.error) {
-          alert("You can't submit the contract until it has succesfully compiled");
-	  return;
-        }
+      oReq.send(params);
+    }
 
-        if (compilerData.contracts.length == 0) {
-          alert("Error!  There is no contract to submit.");
-	  return;
-        }
-
-        if (compilerData.contracts.length != 1) {
-          alert("Sorry, submitting more than one contract not currently supported!");
-	  return;
-        }
-
-	spinnerBox.style.visibility = "visible";
-        var url = '/includetransaction';
-        var value =  0;
-      
-        api.pushTX(parseInt(nonce.value), 
-                   parseInt(gasPrice.value),
-	           parseInt(gasLimit.value), 
-                   undefined,value,
-	           compilerData.contracts[0].bin,
-		   prvkey.value,
-		   url, checkResults);
-      
+    function loadAccountInfo() {
+      address.innerHTML = ''
+      if (!prvkey.value.match(/^[a-f0-9]{64}$/i)) {
+        invalidPrvKeyWarning.style.visibility="visible";
+        return;
       }
 
-      function compile() {
-        //alert('compiling');
-        var oReq = new XMLHttpRequest();
-        oReq.open("POST", "/solc", true);
-
-        var params = "src=" + encodeURIComponent(input.value);
-        oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        //oReq.setRequestHeader("Content-length", params.length);
-        //oReq.setRequestHeader("Connection", "close");
-
-        oReq.onload = function () { 
-          if(oReq.readyState == 4 && oReq.status == 200) {
-	    compilerData = JSON.parse(this.responseText);
-	    if (compilerData.error != null) {
-	      output.style.color = 'red';
-              submitButton.disabled = true;
-	      output.value = compilerData.error;
-	    }
-            else {
-	      output.style.color = 'black';
-              submitButton.disabled = false;
-	      if (compilerData.contracts.length == 0)
-	        output.value = "[Blank]";
-	      else
-	        output.value = "Compiled Binary:\n\n" + compilerData.contracts[0].bin; 
-	    }
+      address.innerHTML = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
+      var oReq = new XMLHttpRequest();
+      oReq.open("GET", "/query/account?address=" + address.innerHTML, true);
+      oReq.onload = function () {
+        if(oReq.readyState == 4 && oReq.status == 200) {
+          invalidPrvKeyWarning.style.visibility="hidden";
+          var responseJSON = JSON.parse(this.responseText);
+          if (responseJSON.length >= 1) {
+            nonce.innerHTML = responseJSON[responseJSON.length - 1].nonce;
+            if (responseJSON.length > 1) alert("error! too many values in account query, just using the last value.");
           }
-          else {
-            output.value = "ERROR!\n" + this.responseText; 
-          }
+          else nonce.innerHTML = "0";
         }
-
-        oReq.send(params);
+        else { //returned an error, but no biggie, could just be a malformed form item, etc.
+          //output.value = "ERROR in fetching address info!\n" + this.responseText;
+        }
       }
 
-      function loadAccountInfo() {
-	address.value = ''
-	if (!prvkey.value.match(/^[a-f0-9]{64}$/i)) {
-	    invalidPrvKeyWarning.style.visibility="visible";
-	    return;
-	}
-
-	address.value = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
-        var oReq = new XMLHttpRequest();
-        oReq.open("GET", "/query/account?address=" + address.value, true);
-        oReq.onload = function () { 
-          if(oReq.readyState == 4 && oReq.status == 200) {
-	    invalidPrvKeyWarning.style.visibility="hidden";
-	    var responseJSON = JSON.parse(this.responseText);
-            if (responseJSON.length >= 1) {
-	      nonce.value = responseJSON[responseJSON.length - 1].nonce;
-	      if (responseJSON.length > 1) alert("error! too many values in account query, just using the last value.");
-	    }
-	    else nonce.value = "0";
-          }
-          else { //returned an error, but no biggie, could just be a malformed form item, etc.
-            //output.value = "ERROR in fetching address info!\n" + this.responseText; 
-          }
-        }
-
-        oReq.send();
-      }
+      oReq.send();
+    }
 
     </script>
-  
+
   </head>
-  <body>
-    <h1>Type your Solidity source code in below</h1>
-    <div style="width: 100%">
-      <textarea id="input" onchange="compile();" onkeyup="compile()">
-contract NameCoin {
+<body>
+  <h1>Type your Solidity source code in below</h1>
+  <div id="container">
+    <div id="solidity-compiler">
+      <textarea class="half-width" id="input" onchange="compile();" onkeyup="compile()">
+        contract NameCoin {
 
-    struct Item {
-      address owner;
-      uint value;
-    }
+          struct Item {
+            address owner;
+            uint value;
+          }
 
-    address gAddress;
-    uint gValue;
-    mapping (uint => Item) registry;
-    
-    function NameCoin() {
-        gAddress = msg.sender;
-    }
+          address gAddress;
+          uint gValue;
+          mapping (uint => Item) registry;
 
-    function register(uint key) {
-      if (registry[key].owner == 0) {
-         registry[key].owner = msg.sender;
-      }
-    }
+          function NameCoin() {
+            gAddress = msg.sender;
+          }
 
-    function transferOwnership(uint key, address newOwner) {
-      if (registry[key].owner == msg.sender) {
-          registry[key].owner = newOwner;
-      }
-    }
+          function register(uint key) {
+            if (registry[key].owner == 0) {
+              registry[key].owner = msg.sender;
+            }
+          }
 
-    function setValue(uint key, uint newValue) {
-      if (registry[key].owner == msg.sender) {
-        registry[key].value = newValue;
-      }
-    }
+          function transferOwnership(uint key, address newOwner) {
+            if (registry[key].owner == msg.sender) {
+              registry[key].owner = newOwner;
+            }
+          }
 
-    function getValue(uint key) constant returns (uint value) {
-      gValue = registry[key].value;
-    }
+          function setValue(uint key, uint newValue) {
+            if (registry[key].owner == msg.sender) {
+              registry[key].value = newValue;
+            }
+          }
 
-    function getOwner(uint key) constant returns (address owner) {
-      gAddress = registry[key].owner;
-    }
-}
+          function getValue(uint key) constant returns (uint value) {
+            gValue = registry[key].value;
+          }
 
+          function getOwner(uint key) constant returns (address owner) {
+            gAddress = registry[key].owner;
+          }
+        }
       </textarea>
-      <textarea id="output" style="border: 0px;" readonly="true"></textarea>
+      <textarea class="half-width" id="output" readonly="true"></textarea>
     </div>
-
-    <table>
-      <tr>
-	<td style="text-align: right;"><label for="prvkey">Private Key:</label></td>
-	<td><input id="prvkey" style="width: 500px;" 
-		   value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"
-		   onkeyup="loadAccountInfo();" /><div id="invalidPrvKeyWarning" class="error">Invalid Private Key</div></td>
-      </tr>
-      <tr>
-	<td style="text-align: right;"><label for="address">Address:</label></td>
-	<td><input id="address" style="width: 300px;" readonly /></td>
-      </tr>
-      <tr>
-	<td style="text-align: right;"></td>
-	<td style="text-align: right;"><button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button></td>
-      </tr>
-    </table>
-
-    <details>
-      <summary>Advanced Options</summary>
-      <table style="border: solid; width: 400px; ">
-	<tr>
-	  <td style="text-align: right;"><label for="gasLimit">Gas Limit:</label></td>
-	  <td><input id="gasLimit" value="1000000" style="width: 300px;" /></td>
-	</tr>
-	<tr>
-	  <td style="text-align: right;"><label for="gasPrice">Gas Price:</label></td>
-	  <td><input id="gasPrice" value="100000" style="width: 300px" /></td>
-	</tr>
-	<tr>
-	  <td style="text-align: right;"><label for="nonce">Nonce:</label></td>
-	  <td><input id="nonce" value="0" style="width: 300px" readonly /></td>
-	</tr>
-      </table>
-    </details>
-
-    <div id="spinnerBox">
-      <div class="spinner" />
+    <div id="account-info">
+      <label>Private Key:</label>
+      <input id="prvkey"
+        value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"
+        onkeyup="loadAccountInfo();" />
+      <p id="invalidPrvKeyWarning" class="error">Invalid Private Key</p>
+      </br>
+      <label for="address">
+        <span>Address:</span>
+        <p id="address"> </p>
+      </label>
+      <button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button>
+      <details>
+        <summary>Advanced Options</summary>
+        <table>
+          <tr>
+            <td class="text-right"><label for="gasLimit">Gas Limit:</label></td>
+            <td><input id="gasLimit" value="1000000"/></td>
+          </tr>
+          <tr>
+            <td class="text-right"><label for="gasPrice">Gas Price:</label></td>
+            <td><input id="gasPrice" value="100000"/></td>
+          </tr>
+          <tr>
+            <td class="text-right"><label for="nonce">Nonce:</label></td>
+            <td><span id="nonce" value="0"></span></td>
+          </tr>
+        </table>
+      </details>
     </div>
-    
-    
+  </div>
+
+  <div id="spinnerBox">
+    <div class="spinner" />
+  </div>
+
+
     <script>
-      compile(); 
-      loadAccountInfo();
-      input.selectionStart = 10;
-      input.selectionEnd = 22;
+    compile();
+    loadAccountInfo();
+    input.selectionStart = 10;
+    input.selectionEnd = 22;
     </script>
   </body>
-</html>
+  </html>
