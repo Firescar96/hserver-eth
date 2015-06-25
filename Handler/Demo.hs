@@ -15,7 +15,7 @@ getAddressExplorerCSSR :: Handler ()
 getAddressExplorerCSSR = sendFile "text/css" "static/css/address-explorer.css"
 
 getWalletJSR :: Handler ()
-getWalletJS = sendFile "text/js" "static/js/ethlightjs.min.js"
+getWalletJSR = sendFile "text/js" "static/js/ethlightjs.min.js"
 
 getWalletHtmlR :: Handler ()
 getWalletHtmlR = sendFile "text/html" "static/example_web.html"
