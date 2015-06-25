@@ -15,8 +15,8 @@ switchLookup()
         var data = document.querySelector('[name="dataField"]').value;
 
         var privateKey = document.querySelector('[name="privKey"]').value;
-      
-        var url = '/includetransaction';
+
+        var url = 'http://stablenet.blockapps.net/includetransaction';
         var isHex = /^[0-9A-F]+$/i;
 
         if (isHex.test(toAddress) && (toAddress != "0x0") && (toAddress != "0x00"))
@@ -35,7 +35,7 @@ switchLookup()
 
          return api.functionNameToData(jsonABI, fName, jsonArgs);
       }
-  
+
       function calculateLookup() {
          switch (lookupType[lookupType.selectedIndex].value) {
             case 'elem':
@@ -47,15 +47,15 @@ switchLookup()
                break;
 
             case 'array':
-               break;           
+               break;
 
             case 'all':
                calculateLookupAll();
                break;
- 
+
             default:
                console.log("other");
-         }         
+         }
       }
 
     function switchLookup() {
@@ -75,38 +75,38 @@ switchLookup()
                key.style.display = "none";
                index.style.display = "block";
                calculateLookupArray();
-               break;           
+               break;
 
             case 'all':
                key.style.display = "none";
                index.style.display = "none";
                calculateLookupAll();
                break;
- 
+
             default:
                console.log("other");
-         }         
+         }
       }
 
       function calculateLookupAll() {
-         api.loadVariableFromStorage(address.value, '/query/storage', 
+         api.loadVariableFromStorage(address.value, '/query/storage',
              function (res) { lookup.value=res; });
       }
 
       function calculateLookupMap() {
          var ikey=api.keyIndexToLookup(key.value, index.value);
-         api.loadVariableFromStorageKey(address.value, ikey, '/query/storage', 
+         api.loadVariableFromStorageKey(address.value, ikey, '/query/storage',
              function (res) { lookup.value=res; });
       }
 
       function calculateLookupArray() {
          var ikey=api.arrayIndexToLookup(index.value);
-         api.loadVariableFromStorageKey(address.value, ikey, '/query/storage', 
+         api.loadVariableFromStorageKey(address.value, ikey, '/query/storage',
              function (res) { lookup.value=res; });
       }
 
       function calculateLookupElementary() {
-         api.loadVariableFromStorageKey(address.value, index.value, '/query/storage', 
+         api.loadVariableFromStorageKey(address.value, index.value, '/query/storage',
              function (res) { lookup.value=res; });
       }
 
@@ -121,8 +121,8 @@ switchLookup()
 
          var oReq = new XMLHttpRequest();
 
-         oReq.open("GET", "/query/account?address=" + addr, true);
-         oReq.onload = function () { 
+         oReq.open("GET", "http://stablenet.blockapps.net/query/account?address=" + addr, true);
+         oReq.onload = function () {
             if(oReq.readyState == 4 && oReq.status == 200) {
 	       var responseJSON = JSON.parse(this.responseText);
             if (responseJSON.length >= 1) {
@@ -132,7 +132,7 @@ switchLookup()
             else nonce.value = "0";
           }
           else { //returned an error, but no biggie, could just be a malformed form item, etc.
-            //output.value = "ERROR in fetching address info!\n" + this.responseText; 
+            //output.value = "ERROR in fetching address info!\n" + this.responseText;
           }
          }
 

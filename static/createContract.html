@@ -176,27 +176,20 @@ function checkResults(response) {
       alert('Transaction has been submitted successfully!');
       loadAccountInfo();
 
-      var form = document.createElement("form");
-      form.method = 'post';
-      form.action = '/afterSubmission.html';
-      var input = document.createElement('input');
-      input.type = "text";
-      input.name = "abi";
-      input.value = JSON.stringify(compilerData.abis[0].abi);
-      form.appendChild(input);
+      console.log(compilerData.abis[0].abi);
 
-      var input2 = document.createElement('input');
-      input2.type = "text";
-      input2.name = "contractAddress";
-      input2.value = util.generateAddress(address.innerHTML, parseInt(nonce.value)).toString('hex');
-      form.appendChild(input2);
+      var form = $('<form method="post" action="/afterSubmission.html"></form>');
+      var input = $('<input type="text" name="abi"></input>');
+      input.val(JSON.stringify(compilerData.abis[0].abi));
+      form.append(input);
 
-      var input3 = document.createElement('input');
-      input3.type = "text";
-      input3.name = "transactionHash";
-      input3.value = x;
-      form.appendChild(input3);
+      var input2 = $('<input type="text" name="contractAddress"></input>');
+      input2.val(util.generateAddress($('address'), parseInt($('#nonce').html())).toString('hex'));
+      form.append(input2);
 
+      var input3 = $('<input type="text" name="transactionHash"></input>');
+      input3.val(x);
+      form.append(input3);
       form.submit();
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
