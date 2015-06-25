@@ -157,9 +157,10 @@ input {
 <script src="/includetransaction/pushtx.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
-<script>
+    <script>
 
-var compilerData = null;
+      var compilerData = null;
+      var keystore = undefined;
 
 function checkResults(response) {
   var x = response.replace(/.*=/, "");
@@ -226,7 +227,6 @@ function submitTransaction() {
     $('#prvkey').val(),
     url, checkResults
   );
-
 }
 
 function compile() {
@@ -259,8 +259,46 @@ function compile() {
   });
 }
 
-function loadAccountInfo() {
-  address.innerHTML = ''
+
+      function loadSeedInfo(){
+
+          var password = document.getElementById("password").value
+          var seed = document.getElementById("seed").value
+          console.log("creating keystore")
+          console.log("seed: " + seed)
+          console.log("password: " + password)
+          keystore = new ethlightjs.keystore(seed, password)
+
+          var x = document.getElementById("address");
+
+          for (i = x.length-1; i >= 0; i--) {
+            x.remove(i)
+          }
+
+          for(i = 0; i < 10; i++){
+                var option = document.createElement("option");
+                var addr = keystore.generateNewAddress(password)
+                option.text =  addr
+                option.innerHTML = addr
+                x.appendChild(option);
+          }
+      }
+
+      function loadAccountInfo() {
+
+          var password = document.getElementById("password").value
+          var seed = document.getElementById("seed").value
+
+
+      var address =  document.getElementById("address").value
+      console.log("fetching prvkey")
+      console.log("address: " + address)
+      console.log("password: " + password)
+      prvKey = keystore.exportPrivateKey(address, password)
+      console.log("setting prvkey: " + prvKey)
+
+      document.getElementById("prvkey").value = prvKey
+
   if (!$('#prvkey').val().match(/^[a-f0-9]{64}$/i)) {
     invalidPrvKeyWarning.style.visibility="visible";
     return;
@@ -283,7 +321,7 @@ function loadAccountInfo() {
     });
 }
 </script>
-
+  
 </head>
 <body>
   <h1>Type your Solidity source code in below</h1>
@@ -332,9 +370,16 @@ function loadAccountInfo() {
           }
         }
       </textarea>
-      <textarea class="half-width" id="output" readonly="true"></textarea>
+      <textarea id="output" style="border: 0px;" readonly="true"></textarea>
     </div>
+
     <div id="account-info">
+      <label for="seed">Seed:</label>
+      <input id="seed" style="width: 500px;" 
+        value="unhappy nerve cancel reject october fix vital pulse cash behind curious bicycle"
+        onkeyup="loadSeedInfo();" onload="loadSeedInfo();"/>
+      <label for="password">Password:</label>
+      <input id="password" type="password" value='mypassword'/>
       <label>Private Key:</label>
       <input id="prvkey"
       value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"
@@ -343,8 +388,11 @@ function loadAccountInfo() {
     </br>
     <label for="address">Address:</label>
     <p id="address"> </p>
+    <input id="address" onchange="loadAccountInfo()" />
+    
     <button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button>
-    <details>
+
+   <details>
       <summary>Advanced Options</summary>
       <table>
         <tr>
