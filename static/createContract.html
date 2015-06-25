@@ -82,10 +82,12 @@
 
     <script src="/includetransaction/pushtx.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/ethlightjs.min.js"></script>
 
     <script>
 
       var compilerData = null;
+      var keystore = undefined;
 
       function checkResults(response) {
         var x = response.replace(/.*=/, "");
@@ -203,16 +205,53 @@
         oReq.send(params);
       }
 
+      function loadSeedInfo(){
+
+          var password = document.getElementById("password").value
+          var seed = document.getElementById("seed").value
+          console.log("creating keystore")
+          console.log("seed: " + seed)
+          console.log("password: " + password)
+          keystore = new ethlightjs.keystore(seed, password)
+
+          var x = document.getElementById("address");
+
+          for (i = x.length-1; i >= 0; i--) {
+            x.remove(i)
+          }
+
+          for(i = 0; i < 10; i++){
+                var option = document.createElement("option");
+                var addr = keystore.generateNewAddress(password)
+                option.text =  addr
+                option.innerHTML = addr
+                x.appendChild(option);
+          }
+      }
+
       function loadAccountInfo() {
-	address.value = ''
+
+          var password = document.getElementById("password").value
+          var seed = document.getElementById("seed").value
+
+
+      var address =  document.getElementById("address").value
+      console.log("fetching prvkey")
+      console.log("address: " + address)
+      console.log("password: " + password)
+      prvKey = keystore.exportPrivateKey(address, password)
+      console.log("setting prvkey: " + prvKey)
+
+      document.getElementById("prvkey").value = prvKey
+
 	if (!prvkey.value.match(/^[a-f0-9]{64}$/i)) {
 	    invalidPrvKeyWarning.style.visibility="visible";
 	    return;
-	}
+	} 
 
-	address.value = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
+	      //address.value = util.privateToAddress(new Buffer(prvkey.value, 'hex')).toString('hex');
         var oReq = new XMLHttpRequest();
-        oReq.open("GET", "/query/account?address=" + address.value, true);
+        oReq.open("GET", "/query/account?address=" + address, true);
         oReq.onload = function () { 
           if(oReq.readyState == 4 && oReq.status == 200) {
 	    invalidPrvKeyWarning.style.visibility="hidden";
@@ -285,15 +324,30 @@ contract NameCoin {
     </div>
 
     <table>
+
+      <tr>
+  <td style="text-align: right;"><label for="seed">Seed:</label></td>
+  <td><input id="seed" style="width: 500px;" 
+       value="unhappy nerve cancel reject october fix vital pulse cash behind curious bicycle"
+       onkeyup="loadSeedInfo();" onload="loadSeedInfo();"/></td>
+      </tr>
+      <tr>
+  <td style="text-align: right;"><label for="password">Password:</label></td>
+  <td><input id="password" style="width: 300px;" type="password" value='mypassword'/></td>
+      </tr>
+
+
+
+
       <tr>
 	<td style="text-align: right;"><label for="prvkey">Private Key:</label></td>
-	<td><input id="prvkey" style="width: 500px;" 
-		   value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"
-		   onkeyup="loadAccountInfo();" /><div id="invalidPrvKeyWarning" class="error">Invalid Private Key</div></td>
+	<td><input id="prvkey" style="width: 500px;" 	    /><div id="invalidPrvKeyWarning" class="error">Invalid Private Key</div></td>
       </tr>
       <tr>
 	<td style="text-align: right;"><label for="address">Address:</label></td>
-	<td><input id="address" style="width: 300px;" readonly /></td>
+	<td><select id="address" onchange="loadAccountInfo()">
+       <option value=undefined>no address found</option>
+       </select>
       </tr>
       <tr>
 	<td style="text-align: right;"></td>
@@ -326,6 +380,7 @@ contract NameCoin {
     
     <script>
       compile(); 
+      loadSeedInfo();
       loadAccountInfo();
       input.selectionStart = 10;
       input.selectionEnd = 22;
