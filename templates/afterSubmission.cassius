@@ -19,7 +19,6 @@ h1
 textarea
   width: 100%;
   height: 60%;
-  color: black;
   display: inline-block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -45,8 +44,8 @@ textarea
   white-space: nowrap;
   border-radius: 4px;
 
-#main, .container
-  height: 100%;
+#container
+  margin: 15px;
 
 #submissionDetails
   display: inline-block;
@@ -61,7 +60,6 @@ textarea
 
 #contract-details
   width: 70%;
-  height: 80%;
   display: inline-block;
 
 #contract-address
