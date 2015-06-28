@@ -1,17 +1,16 @@
-<div class="container">
-  <h1>Your contract has been submitted!</h1>
-  <div id="contract-titles">
-    <p class="half-width">Contract ABI</p>
-    <p class="half-width">Extra Details</p>
-  <div id="submissionDetails">
-    <p id="contract-address">Contract Address: <span id="address">6dc48afde38855dd5b7aefcb23e521f7e1a7c25</span></p>
-    <br>
-    <br>
-    <br>
-    <p id="result-submission">Result of submission: <span id="result">Success</span></p>
-    <br>
-    <br>
-    <button id="launchButton" onclick="launchDemo(abi)">Launch Demo</button>
-  <div id="contract-details">
-    <textarea class="half-width">[{"constant":true,"inputs":[{"name":"key","type":"uint256"}],"name":"getValue","outputs":[{"name":"value","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"key","type":"uint256"},{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"key","type":"uint256"},{"name":"newValue","type":"uint256"}],"name":"setValue","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"key","type":"uint256"}],"name":"getOwner","outputs":[{"name":"owner","type":"address"}],"type":"function"},{"constant":false,"inputs":[{"name":"key","type":"uint256"}],"name":"register","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"}]</textarea>
-    <textarea class="half-width" id="details" readonly></textarea>
+<h1>Your contract has been submitted!</h1>
+<div id="contract-titles">
+  <p class="half-width">Contract ABI</p>
+  <p class="half-width">Extra Details</p>
+<div id="submissionDetails">
+  <p id="contract-address">Contract Address: <span id="address">6dc48afde38855dd5b7aefcb23e521f7e1a7c25</span></p>
+  <br>
+  <br>
+  <br>
+  <p id="result-submission">Result of submission: <span id="result"></span></p>
+  <br>
+  <br>
+  <button id="launchButton" onclick="launchDemo(abi)">Launch Demo</button>
+<div id="contract-details">
+  <textarea class="half-width" id="abi"></textarea>
+  <textarea class="half-width" id="message" readonly></textarea>

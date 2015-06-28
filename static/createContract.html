@@ -1,434 +1,429 @@
+
 <html>
-<head>
-<style>
-.text-right {
-  text-align: right;
-}
+  <head>
+  <style>
+  .text-right {
+    text-align: right;
+  }
 
-body {
-  background-color: #13223c;
-  font: impact;
-  color: rgba(255, 255, 255, 0.4);
-}
+  body {
+    background-color: #13223c;
+    font: impact;
+    color: rgba(255, 255, 255, 0.4);
+  }
 
-.error {
-  color:#e53b51;
-  display: inline-block;
-  visibility: hidden;
-}
+  .error {
+    color:#e53b51;
+    display: inline-block;
+    visibility: hidden;
+  }
 
-.half-width {
-  width: 50%;
-  float: left;
-}
+  .half-width {
+    width: 50%;
+    float: left;
+  }
 
-textarea {
-  width: 50%;
-  height: 60%;
-  display: inline-block;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
+  textarea {
+    width: 50%;
+    height: 80%;
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
 
-.spinner {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  height:60px;
-  width:60px;
-  margin:0px auto;
-  -webkit-animation: rotation .6s infinite linear;
-  -moz-animation: rotation .6s infinite linear;
-  -o-animation: rotation .6s infinite linear;
-  animation: rotation .6s infinite linear;
-  border-left:6px solid rgba(0,174,239,.15);
-  border-right:6px solid rgba(0,174,239,.15);
-  border-bottom:6px solid rgba(0,174,239,.15);
-  border-top:6px solid rgba(0,174,239,.8);
-  border-radius:100%;
-  opacity: .5;
-}
+  .spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height:60px;
+    width:60px;
+    margin:0px auto;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border-left:6px solid rgba(0,174,239,.15);
+    border-right:6px solid rgba(0,174,239,.15);
+    border-bottom:6px solid rgba(0,174,239,.15);
+    border-top:6px solid rgba(0,174,239,.8);
+    border-radius:100%;
+    opacity: .5;
+  }
 
-@-webkit-keyframes rotation {
-  from {-webkit-transform: rotate(0deg);}
-  to {-webkit-transform: rotate(359deg);}
-}
-@-moz-keyframes rotation {
-  from {-moz-transform: rotate(0deg);}
-  to {-moz-transform: rotate(359deg);}
-}
-@-o-keyframes rotation {
-  from {-o-transform: rotate(0deg);}
-  to {-o-transform: rotate(359deg);}
-}
-@keyframes rotation {
-  from {transform: rotate(0deg);}
-  to {transform: rotate(359deg);}
-}
-
-
-#spinnerBox {
-  visibility: hidden;
-  position: absolute;
-  top:0;
-  background-color: #ffd600;
-  width: 100%;
-  height: 100%;
-}
-
-#nonce, #gasPrice, #gasLimit {
-  width: 300px;
-}
-
-#submitButton{
-  color: #fff;
-  background: #337ab7;
-  border-color: #337ab7;
-  display: block;
-  padding: 0 1.5rem;
-  letter-spacing: 0.3px;
-  font-family: "Raleway", sans-serif;
-  font-weight: 700;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1rem;
-  text-align: center;
-  font-size: 11px;
-  line-height: 38px;
-  letter-spacing: .1rem;
-  text-transform: uppercase;
-  white-space: nowrap;
-  border-radius: 4px;
-}
-
-input {
-  color: #fff;
-  text-transform: lowercase;
-  margin: auto;
-  font-weight: bold;
-  width: 100%;
-  font-family: "Raleway", sans-serif;
-  font-size: 1.2rem;
-  background-color: #162744;
-  border: 0px;
-  border-bottom: solid 2px rgba(255, 255, 255, 0.4);
-  padding: 6px 10px;
-  margin-bottom: 1.5rem;
-}
-
-#prvkey {
-  margin: 0px;
-}
-
-#container {
-  margin: 15px;
-}
-
-#solidity-compiler {
-  width: 70%;
-  display: inline-block;
-  float: left;
-}
-
-#account-info {
-  width: 30%;
-  display: inline-block;
-  float: left;
-  word-wrap: break-word;
-}
-
-#address,#nonce {
-  color: #ffd600;;
-  text-transform: lowercase;
-  margin: auto;
-  font-weight: bold;
-  width: 100%;
-  font-family: "Raleway", sans-serif;
-  font-size: 1.2rem;
-  padding: 6px 10px;
-  margin-bottom: 1.5rem;
-}
-
-</style>
+  @-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(359deg);}
+  }
+  @-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(359deg);}
+  }
+  @-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to {-o-transform: rotate(359deg);}
+  }
+  @keyframes rotation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+  }
 
 
-<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="/includetransaction/pushtx.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  #spinnerBox {
+    visibility: hidden;
+    position: absolute;
+    top:0;
+    background-color: #ffd600;
+    width: 100%;
+    height: 100%;
+  }
+
+  #nonce, #gasPrice, #gasLimit {
+    width: 300px;
+  }
+
+  #submitButton{
+    color: #fff;
+    background: #337ab7;
+    border-color: #337ab7;
+    display: block;
+    padding: 0 1.5rem;
+    letter-spacing: 0.3px;
+    font-family: "Raleway", sans-serif;
+    font-weight: 700;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 11px;
+    line-height: 38px;
+    letter-spacing: .1rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border-radius: 4px;
+  }
+
+  input {
+    color: #fff;
+    text-transform: lowercase;
+    margin: auto;
+    font-weight: bold;
+    width: 100%;
+    font-family: "Raleway", sans-serif;
+    font-size: 1.2rem;
+    background-color: #162744;
+    border: 0px;
+    border-bottom: solid 2px rgba(255, 255, 255, 0.4);
+    padding: 6px 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  #container {
+    margin: 15px;
+  }
+
+  #solidity-compiler {
+    width: 70%;
+    display: inline-block;
+    float: left;
+  }
+
+  #account-info {
+    width: 30%;
+    display: inline-block;
+    float: left;
+    word-wrap: break-word;
+  }
+
+  #address, #nonce, #prvkey {
+    text-transform: lowercase;
+    margin: auto;
+    font-weight: bold;
+    width: 100%;
+    font-family: "Raleway", sans-serif;
+    font-size: 1.2rem;
+    padding: 6px 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  #address {
+    color:#3cb5b5;
+    font-size: 1em;
+    text-align: center;
+  }
+  #nonce, #prvkey {
+    color: #ffd600;
+  }
+
+  #prvkey {
+    font-size: 1em;
+  }
+
+  </style>
+
+    <script src="/includetransaction/pushtx.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/ethlightjs.min.js"></script>
 
     <script>
 
       var compilerData = null;
       var keystore = undefined;
 
-function checkResults(response) {
-  var x = response.replace(/.*=/, "");
-  //window.setInterval("checkResult(" + ")", 1000);
+      function checkResults(response) {
+        var x = response.replace(/.*=/, "");
+        //window.setInterval("checkResult(" + ")", 1000);
 
-  $.get("/transactionResult/" + x)
-    .done(function(data) {
-      spinnerBox.style.visibility = 'hidden';
-      var responseText = "";
-      for(var i = 0; i < data.length; i++) {
-        responseText = responseText + data[i].message + "\n";
+        $.get("/transactionResult/" + x)
+          .done(function(data) {
+            spinnerBox.style.visibility = 'hidden';
+            var responseText = "";
+            for(var i = 0; i < data.length; i++) {
+              responseText = responseText + data[i].message + "\n";
+            }
+            $('#output').val(responseText);
+            alert('Transaction has been submitted successfully!');
+            loadAccountInfo();
+
+            console.log(compilerData.abis[0].abi);
+
+            var form = $('<form method="post" action="/afterSubmission.html"></form>'); //http://stablenet.blockapps.net
+            var abi = $('<input type="text" name="abi"></input>')
+              .val(JSON.stringify(compilerData.abis[0].abi));
+
+            var contractAddress = $('<input type="text" name="contractAddress"></input>')
+              .val(util.generateAddress($('#address').val(), parseInt($('#nonce').html())).toString('hex'));
+
+            var transactionHash = $('<input type="text" name="transactionHash">')
+              .val(x);
+
+            form
+              .append(abi)
+              .append(transactionHash)
+              .append(contractAddress);
+
+            console.log(abi.html());
+            console.log(abi);
+            console.log(form.html());
+            form.submit();
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            $('#output').val("ERROR!\n" + textStatus);
+          });
       }
-      $('#output').val(responseText);
-      alert('Transaction has been submitted successfully!');
-      loadAccountInfo();
 
-      var form = document.createElement("form");
-      form.method = 'post';
-      form.action = '/afterSubmission.html';
-      var input = document.createElement('input');
-      input.type = "text";
-      input.name = "abi";
-      input.value = JSON.stringify(compilerData.abis[0].abi);
-      form.appendChild(input);
+      function submitTransaction() {
+        if (compilerData.error) {
+          alert("You can't submit the contract until it has succesfully compiled");
+	        return;
+        }
 
-      var input2 = document.createElement('input');
-      input2.type = "text";
-      input2.name = "contractAddress";
-      input2.value = util.generateAddress(address.innerHTML, parseInt(nonce.value)).toString('hex');
-      form.appendChild(input2);
+        if (compilerData.contracts.length == 0) {
+          alert("Error!  There is no contract to submit.");
+	        return;
+        }
 
-      var input3 = document.createElement('input');
-      input3.type = "text";
-      input3.name = "transactionHash";
-      input3.value = x;
-      form.appendChild(input3);
+        if (compilerData.contracts.length != 1) {
+          alert("Sorry, submitting more than one contract not currently supported!");
+	        return;
+        }
 
-      form.submit();
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-      $('#output').val("ERROR!\n" + textStatus);
-    });
-}
+	      spinnerBox.style.visibility = "visible";
+        var url = 'http://stablenet.blockapps.net/includetransaction';
+        var value =  0;
 
-function submitTransaction() {
-  if (compilerData.error) {
-    alert("You can't submit the contract until it has succesfully compiled");
-    return;
-  }
+        api.pushTX(
+          parseInt($('#nonce').html()),
+          parseInt($('#gasPrice').val()),
+          parseInt($('#gasLimit').val()),
+          undefined,value,
+          compilerData.contracts[0].bin,
+          $('#prvkey').html(),
+          url, checkResults
+        );
+      }
 
-  if (compilerData.contracts.length == 0) {
-    alert("Error!  There is no contract to submit.");
-    return;
-  }
-
-  if (compilerData.contracts.length != 1) {
-    alert("Sorry, submitting more than one contract not currently supported!");
-    return;
-  }
-
-  spinnerBox.style.visibility = "visible";
-  var url = 'http://stablenet.blockapps.net/includetransaction';
-  var value =  0;
-
-  api.pushTX(
-    parseInt($('#nonce').html()),
-    parseInt($('#gasPrice').val()),
-    parseInt($('#gasLimit').val()),
-    undefined,value,
-    compilerData.contracts[0].bin,
-    $('#prvkey').val(),
-    url, checkResults
-  );
-}
-
-function compile() {
-  //oReq.setRequestHeader("Content-length", params.length);
-  //oReq.setRequestHeader("Connection", "close");
-  $.ajax({
-    type: "POST",
-    url: "/solc",
-    data: "src=" + encodeURIComponent(input.value),
-    contentType: "application/x-www-form-urlencoded"
-  })
-  .done(function(data, textStatus, jqXHR) {
-    compilerData = JSON.parse(data);
-    if (compilerData.error != null) {
-      output.style.color = 'red';
-      submitButton.disabled = true;
-      $('#output').val(compilerData.error);
-    }
-    else {
-      output.style.color = 'black';
-      submitButton.disabled = false;
-      if (compilerData.contracts.length == 0)
-        $('#output').val("[Blank]");
-      else
-        $('#output').val("Compiled Binary:\n\n" + compilerData.contracts[0].bin);
-    }
-  })
-  .fail(function(jqXHR, textStatus, errorThrown) {
-    $('#output').val("ERROR!\n" + textStatus);
-  });
-}
-
+      function compile() {
+        $.ajax({
+          type: "POST",
+          url: "/solc",
+          data: "src=" + encodeURIComponent($("#input").val()),
+          contentType: "application/x-www-form-urlencoded"
+        })
+        .done(function(data, textStatus, jqXHR) {
+          compilerData = JSON.parse(data);
+          if (compilerData.error != null) {
+            output.style.color = 'red';
+            submitButton.disabled = true;
+            $('#output').val(compilerData.error);
+          }
+          else {
+            output.style.color = 'black';
+            submitButton.disabled = false;
+            if (compilerData.contracts.length == 0)
+              $('#output').val("[Blank]");
+            else
+              $('#output').val("Compiled Binary:\n\n" + compilerData.contracts[0].bin);
+          }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          $('#output').val("ERROR!\n" + textStatus);
+        });
+      }
 
       function loadSeedInfo(){
 
-          var password = document.getElementById("password").value
-          var seed = document.getElementById("seed").value
+          var password = $("#password").val()
+          var seed = $("#seed").val()
           console.log("creating keystore")
           console.log("seed: " + seed)
           console.log("password: " + password)
           keystore = new ethlightjs.keystore(seed, password)
 
-          var x = document.getElementById("address");
+          var address = $("#address")
+            .find('option')
+            .remove()
+            .end()
 
-          for (i = x.length-1; i >= 0; i--) {
-            x.remove(i)
-          }
+          console.log(address);
 
           for(i = 0; i < 10; i++){
-                var option = document.createElement("option");
-                var addr = keystore.generateNewAddress(password)
-                option.text =  addr
-                option.innerHTML = addr
-                x.appendChild(option);
+            var newAddr = keystore.generateNewAddress(password)
+            address.append(
+              $("<option></option>")
+                .val(newAddr)
+                .text(newAddr)
+            );
           }
       }
 
       function loadAccountInfo() {
+        var password = $("#password").val()
+        var seed = $("#seed").val()
+        var address =  $("#address").val()
+        console.log("fetching prvkey")
+        console.log("address: " + address)
+        console.log("password: " + password)
+        var prvKey = keystore.exportPrivateKey(address, password)
 
-          var password = document.getElementById("password").value
-          var seed = document.getElementById("seed").value
+        $("#prvkey").text(prvKey)
 
-
-      var address =  document.getElementById("address").value
-      console.log("fetching prvkey")
-      console.log("address: " + address)
-      console.log("password: " + password)
-      prvKey = keystore.exportPrivateKey(address, password)
-      console.log("setting prvkey: " + prvKey)
-
-      document.getElementById("prvkey").value = prvKey
-
-  if (!$('#prvkey').val().match(/^[a-f0-9]{64}$/i)) {
-    invalidPrvKeyWarning.style.visibility="visible";
-    return;
-  }
-
-  $('#address').html(util.privateToAddress(new Buffer($('#prvkey').val(), 'hex')).toString('hex'));
-  $.get("/query/account?address=" + $('#address').html())
-    .done(function(data, textStatus, jqXHR) {
-      invalidPrvKeyWarning.style.visibility="hidden";
-      if (data.length >= 1) {
-        $('#nonce').html(data[data.length - 1].nonce);
-        if (data.length > 1) alert("error! too many values in account query, just using the last value.");
+        $.get("/query/account",{address: address})
+          .done(function(response) {
+            if(response.length > 0)
+              $("#nonce").text(response[0].nonce)
+            else
+              $("#nonce").text(0)
+          })
+          .fail(function() {
+            $("#nonce").text(0)
+            //returned an error, but no biggie, could just be a malformed form item, etc.
+          })
       }
-      else
-        $('#nonce').html("0");
-      })
-    .fail(function() {
-      //returned an error, but no biggie, could just be a malformed form item, etc.
-        //output.value = "ERROR in fetching address info!\n" + this.responseText;
-    });
-}
-</script>
-  
-</head>
-<body>
-  <h1>Type your Solidity source code in below</h1>
-  <div id="container">
-    <div id="solidity-compiler">
-      <textarea class="half-width" id="input" onchange="compile();" onkeyup="compile()">
-        contract NameCoin {
+    </script>
 
-          struct Item {
-            address owner;
-            uint value;
-          }
+  </head>
+  <body>
+    <div id="container">
+      <div id="solidity-compiler">
+        <textarea id="input" onchange="compile();" onkeyup="compile()">
+          contract NameCoin {
 
-          address gAddress;
-          uint gValue;
-          mapping (uint => Item) registry;
+            struct Item {
+              address owner;
+              uint value;
+            }
 
-          function NameCoin() {
-            gAddress = msg.sender;
-          }
+            address gAddress;
+            uint gValue;
+            mapping (uint => Item) registry;
 
-          function register(uint key) {
-            if (registry[key].owner == 0) {
-              registry[key].owner = msg.sender;
+            function NameCoin() {
+              gAddress = msg.sender;
+            }
+
+            function register(uint key) {
+              if (registry[key].owner == 0) {
+                registry[key].owner = msg.sender;
+              }
+            }
+
+            function transferOwnership(uint key, address newOwner) {
+              if (registry[key].owner == msg.sender) {
+                registry[key].owner = newOwner;
+              }
+            }
+
+            function setValue(uint key, uint newValue) {
+              if (registry[key].owner == msg.sender) {
+                registry[key].value = newValue;
+              }
+            }
+
+            function getValue(uint key) constant returns (uint value) {
+              gValue = registry[key].value;
+            }
+
+            function getOwner(uint key) constant returns (address owner) {
+              gAddress = registry[key].owner;
             }
           }
 
-          function transferOwnership(uint key, address newOwner) {
-            if (registry[key].owner == msg.sender) {
-              registry[key].owner = newOwner;
-            }
-          }
+        </textarea><!--
+        --><textarea id="output" style="border: 0px;" readonly="true"></textarea>
+      </div>
 
-          function setValue(uint key, uint newValue) {
-            if (registry[key].owner == msg.sender) {
-              registry[key].value = newValue;
-            }
-          }
-
-          function getValue(uint key) constant returns (uint value) {
-            gValue = registry[key].value;
-          }
-
-          function getOwner(uint key) constant returns (address owner) {
-            gAddress = registry[key].owner;
-          }
-        }
-      </textarea>
-      <textarea id="output" style="border: 0px;" readonly="true"></textarea>
-    </div>
-
-    <div id="account-info">
-      <label for="seed">Seed:</label>
-      <input id="seed" style="width: 500px;" 
+      <div id="account-info">
+        <label for="seed">Seed:</label>
+        <input id="seed" style="width: 500px;"
         value="unhappy nerve cancel reject october fix vital pulse cash behind curious bicycle"
         onkeyup="loadSeedInfo();" onload="loadSeedInfo();"/>
-      <label for="password">Password:</label>
-      <input id="password" type="password" value='mypassword'/>
-      <label>Private Key:</label>
-      <input id="prvkey"
-      value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"
-      onkeyup="loadAccountInfo();" />
-      <p id="invalidPrvKeyWarning" class="error">Invalid Private Key</p>
-    </br>
-    <label for="address">Address:</label>
-    <p id="address"> </p>
-    <input id="address" onchange="loadAccountInfo()" />
-    
-    <button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button>
+        <br/>
+        <br/>
+        <label for="password">Password:</label>
+        <input id="password" type="password" value='mypassword'/>
+        <br/>
+        <br/>
+        <label>Private Key:</label>
+        <p id="prvkey"><p/>
+        <br/>
+        <br/>
+        <label for="address">Address:</label>
+        <select id="address" onchange="loadAccountInfo()">
+          <option>no address</option>
+        </select>
+        <br/>
+        <br/>
+        <button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button>
 
-   <details>
-      <summary>Advanced Options</summary>
-      <table>
-        <tr>
-          <td class="text-right"><label for="gasLimit">Gas Limit:</label></td>
-          <td><input id="gasLimit" value="1000000"/></td>
-        </tr>
-        <tr>
-          <td class="text-right"><label for="gasPrice">Gas Price:</label></td>
-          <td><input id="gasPrice" value="100000"/></td>
-        </tr>
-        <tr>
-          <td class="text-right"><label for="nonce">Nonce:</label></td>
-          <td><span id="nonce" value="0"></span></td>
-        </tr>
-      </table>
-    </details>
-  </div>
-</div>
+        <details>
+          <summary>Advanced Options</summary>
+          <table>
+            <tr>
+              <td class="text-right"><label for="gasLimit">Gas Limit:</label></td>
+              <td><input id="gasLimit" value="1000000"/></td>
+            </tr>
+            <tr>
+              <td class="text-right"><label for="gasPrice">Gas Price:</label></td>
+              <td><input id="gasPrice" value="100000"/></td>
+            </tr>
+            <tr>
+              <td class="text-right"><label for="nonce">Nonce:</label></td>
+              <td><span id="nonce">0</span></td>
+            </tr>
+          </table>
+        </details>
+      </div>
+    </div>
+    <div id="spinnerBox">
+      <div class="spinner" />
+    </div>
 
-<div id="spinnerBox">
-  <div class="spinner" />
-</div>
 
-
-<script>
-compile();
-loadAccountInfo();
-input.selectionStart = 10;
-input.selectionEnd = 22;
-</script>
-</body>
+    <script>
+    compile();
+    loadSeedInfo();
+    loadAccountInfo();
+    </script>
+  </body>
 </html>
