@@ -214,7 +214,25 @@ data AddressStateRef' = AddressStateRef' AddressStateRef deriving (Eq, Show)
 instance ToJSON AddressStateRef' where
     toJSON (AddressStateRef' (AddressStateRef a@(Address x) n b cr c bId bNum)) = 
         object ["kind" .= ("AddressStateRef" :: String), "address" .= (showHex x ""), "nonce" .= n, "balance" .= show b, 
-        "contractRoot" .= cr, "code" .= c]
+        "contractRoot" .= cr, "code" .= c, "latestBlockId" .= bId, "latestBlockNum" .= bNum]
+
+
+instance FromJSON AddressStateRef' where
+    parseJSON (Object s) = do
+      kind <- s .: "kind"
+      if kind /= ("AddressStateRef" :: String)
+        then fail "JSON is not AddressStateRef"
+        else asrToAsrPrime <$> 
+              (AddressStateRef
+                <$> Address P.. fst P.. P.head P.. readHex <$> s .: "address"
+                <*> s .: "nonce"
+                <*> (read <$> (s .: "balance"))
+                <*> s .: "contractRoot"
+                <*> s .: "code"
+                <*> s .: "latestBlockId"
+                <*> s .: "latestBlockNum"
+              )
+    parseJSON _ = fail "JSON not an object"
 
 asrToAsrPrime :: AddressStateRef -> AddressStateRef'
 asrToAsrPrime x = AddressStateRef' x
