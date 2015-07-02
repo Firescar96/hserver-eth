@@ -77,6 +77,7 @@ import Handler.AfterSubmission
 import Handler.TransactionDemo
 import Handler.StorageInfo
 import Handler.TransactionResult
+import Handler.Faucet
 
 import Debug.Trace
 debug = flip trace
