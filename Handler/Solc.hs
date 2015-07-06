@@ -32,6 +32,8 @@ getResponse val = do
 
 postSolcR::Handler Text
 postSolcR = do
+  addHeader "Access-Control-Allow-Origin" "*"
+
   maybeVal <- lookupPostParam "src"
   liftIO $ putStrLn $ T.pack $ show maybeVal
   case maybeVal of
