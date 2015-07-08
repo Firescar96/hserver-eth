@@ -34,7 +34,7 @@ function getTransactionResults() {
       var response = JSON.parse(this.responseText); 
       for(i = 0; i < response.length; i++) {
         result.value = result.value + response[i].message + "\n";
-        details.value = details.value + response[i].details + "\n";
+        details.value = details.value + response[i].trace + "\n";
       }
     }
     else {
