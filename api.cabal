@@ -57,6 +57,7 @@ library
                      Handler.StorageInfo
                      Handler.TransactionResult
                      Handler.Faucet
+                     Handler.ExtABI
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -130,6 +131,9 @@ library
                  , process
                  , parsec
                  , haskoin
+                 , solidity-abi
+                 , aeson-pretty
+
 executable         api
     if flag(library-only)
         Buildable: False
@@ -187,4 +191,5 @@ test-suite test
                  , aeson
                  , blaze-html
                  , blaze-markup
-                 
+                 , solidity-abi                 
+                 , aeson-pretty
