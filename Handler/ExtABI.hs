@@ -22,7 +22,7 @@ postExtABIR = do
   liftIO $ putStrLn $ T.pack $ show maybeVal
   case maybeVal of
     (Just val) -> do
-      let result = map makeContractABI <$> getABI ("") (T.unpack $ val)
+      let result = map makeContractSymbolTable <$> getABI ("") (T.unpack $ val)
       case result of
         Left err -> return $ T.pack $ "{\"error\": " ++ show err ++ "}"
         Right v -> return $ T.decodeUtf8 $ BL.toStrict $ J.encodePretty v
