@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <style>
+      textarea {
+        width: 48%;
+        height: 90%;
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+    </style>
+    <script src="pushtx.js"></script>
+    <script>
+      function putInAbidata(vars) {
+          abidata.value = JSON.stringify(vars);
+      }
+      function displayStorage(contract) {
+          contract.showStorage(putInAbidata);
+      }
+      function submitCode() {
+          api.getContract(input.value, privkey.value, 1, 3141592,
+              displayStorage);
+      }
+    </script>
+  </head>
+  <body>
+    <div style="width: 100%">
+      <textarea id="input">
+contract NameCoin {
+
+    struct Item {
+      address owner;
+      uint value;
+    }
+
+    address gAddress;
+    uint gValue;
+    mapping (uint => Item) registry;
+    
+    function NameCoin() {
+        gAddress = msg.sender;
+    }
+
+    function register(uint key) {
+      if (registry[key].owner == 0) {
+         registry[key].owner = msg.sender;
+      }
+    }
+
+    function transferOwnership(uint key, address newOwner) {
+      if (registry[key].owner == msg.sender) {
+          registry[key].owner = newOwner;
+      }
+    }
+
+    function setValue(uint key, uint newValue) {
+      if (registry[key].owner == msg.sender) {
+        registry[key].value = newValue;
+      }
+    }
+
+    function getValue(uint key) constant returns (uint value) {
+      gValue = registry[key].value;
+    }
+
+    function getOwner(uint key) constant returns (address owner) {
+      gAddress = registry[key].owner;
+    }
+}
+      </textarea>
+      <textarea id="abidata"></textarea>
+    </div>
+    <table>
+      <tr>
+        <label for="privkey">Private Key:</label>
+        <input id="privkey" style="width: 500px;"
+               value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"/>
+      </tr>
+      <tr>
+        <button id="submitButton" onclick="submitCode()"
+                >Press here to submit transaction</button>
+      </tr>
+  </body>
+</html>
