@@ -8,13 +8,14 @@ import qualified Data.Text.Encoding as T
 import Control.Monad.Trans.Either
 
 import Data.Char
+import qualified Data.Map as Map(fromList)
 
 import Import
 import qualified Data.List (sort)
 import Handler.BlkLast
 import System.Process
 import qualified Data.ByteString.Lazy as BL
-import Data.Aeson.Encode.Pretty as J 
+import Data.Aeson.Encode as J 
 import Blockchain.Solidity.ABI   
 
 runSolc::String->String->EitherT String IO [(String, String)]
@@ -31,7 +32,7 @@ getResponse val = do
   let extABI = map makeContractSymbolTable <$> getABI ("") (val)
   
   let xABI = case extABI of 
-              (Right extABI') -> T.decodeUtf8 $ BL.toStrict $ J.encodePretty $ extABI'
+              (Right extABI') -> T.decodeUtf8 $ BL.toStrict $ J.encode $ Map.fromList extABI'
               (Left err) -> ""
   return $ 
     "{\"abis\": " ++ 
