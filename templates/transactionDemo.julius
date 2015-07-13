@@ -117,7 +117,7 @@ switchLookup()
             return;
          }
 
-         addr = util.privateToAddress(new Buffer(privKey.value, 'hex')).toString('hex');
+         addr = utils.privateToAddress(new Buffer(privKey.value, 'hex')).toString('hex');
 
          var oReq = new XMLHttpRequest();
 
