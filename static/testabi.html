@@ -12,19 +12,19 @@
     </style>
     <script src="js/pushtx.js"></script>
     <script>
-      function putInAbidata(vars) {
-          abidata.value = JSON.stringify(vars);
-      }
-      function addToAbidata(val) {
-          abidata.value += "\nBalance: " + val;
-      }
-      function displayStorage(contract) {
-          contract.showStorage("",putInAbidata);
-          contract.getBalance("",addToAbidata);
+      function displayContract(contract) {
+          function addToAbidata() {
+              abidata.value = "Balance: " + contract.balance;
+              abidata.value += "\n\nContract state variables:"
+              for (var sym in contract.vars) {
+                  abidata.value += "\n" + sym + " = " + JSON.stringify(contract.vars[sym]);
+               }
+          }
+          contract.sync("", addToAbidata);
       }
       function submitCode() {
           api.getContract("", input.value, privkey.value, 1, 3141592,
-              displayStorage);
+              displayContract);
       }
     </script>
   </head>
