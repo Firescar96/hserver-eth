@@ -327,7 +327,6 @@ exports.Contract = function(address, abi, symtab) {
         this._storage.sync(apiURL, setVars);
         
         var setBalanceAndNonce = (function (accountQueryResponse) {
-            console.log(accountQueryResponse);
             var firstAccount = accountQueryResponse[0];
             this.balance = firstAccount.balance;
             this.nonce   = firstAccount.nonce;
@@ -413,7 +412,6 @@ exports.getContractsCreated = function(apiURL, txHash, f) {
         return transactionResultResponse[0].contractsCreated.split(",")[0];
     }
 
-    alert("Push OK to get contracts");
     queryAPI(apiURL + "/transactionResult/" + txHash,
                      firstContractCreated, f);
 }
