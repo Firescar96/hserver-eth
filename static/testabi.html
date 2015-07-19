@@ -93,28 +93,57 @@ contract NameCoin {
     "http://stablenet.blockapps.net".
     <ul>
       <li>Contract object: api.Contract(address, functionABI,
-        symbolTable). Methods:
+        symbolTable).  It has the properties:
         <ul>
-          <li>showStorage(apiURL, callback).  Looks up all global
-            ("state") variables named in the Solidity source, parsing
-            their stored values into Javascript objects and returning an
-            association list { var1Name: var1Val, ... } to the callback
-            function.  These objects are:
-            <ul>
-              <li> bool: boolean
-              <li> address: hex string
-              <li> int, uint: BigInt (from the big-integer library)
-              <li> bytes32: ASCII string
-              <li> others: not yet handled...
-            </ul>
           <li>address: the address of the contract object, assigned at
             creation.
-          <li>makeCall(functionName, args).  Forms the data string to
-            be sent in an Ethereum transaction to call the function with
-            the given arguments.
-          <li>getBalance(apiURL, callback).  Gets the current ether
-            balance of the contract.
+          <li>nonce: the address's nonce, current as of the last call
+            to sync(), described below.
+          <li>balance: the address's balance, current as of the last
+          call to sync().
+          <!-- <li>makeCall(functionName, args).  Forms the data string to -->
+          <!--   be sent in an Ethereum transaction to call the function with -->
+          <!--   the given arguments. -->
+          <li>sync(apiURL, callback): this asynchronous function reads
+            the blockchain (via the REST api exposed at
+            stablenet.blockapps.net) to determine the current nonce,
+            balance, and state variable values of the address.  The
+            callback (which takes no arguments) is then invoked.
+          <li>vars: an associative array whose properties are the
+            names of all Solidity state variables of the contract, as
+            described in the symbolTable argument to the constructor.
+            These properties are interpreted as reasonable Javascript
+            types:
+            <ul>
+              <li>bool: Boolean
+              <li>address: String (of the form "0x..." with 40 hex
+                digits)
+              <li>uint/int: (any bit size) a BigInt, from the
+                big-integer library.
+              <li>bytes: (any bit size or dynamic) a string,
+                containing the hex representation of the bytes.
+              <li>string: a string.  Note that bytes and string are
+                currently not correctly implemented in solc.
+              <li>contracts: Contract object.  This is not currently
+                implemented.
+              <li>structs: JS object whose properties are the fields
+                of the struct.
+              <li>arrays: JS array of the values as their associated
+                JS objects.
+              <li>mappings: a function taking an elementary type (in
+                its JS representation) and returning the associated
+                value (also in JS representation).  This is not
+                well-tested currently.
+            </ul>
         </ul>
+      <li>api.getContract(apiURL, code, privKey, gasPrice, gasLimit,
+        callback): the actual interface for constructing a Contract
+        object from Solidity code.  This compiles the code, submits it
+        as a contract creation transaction from the address owning the
+        private key, extracts the necessary data to interpret the
+        variables (the "symbol table" argument, symtab, to Contract),
+        and creates the contract object.  This new contract is passed
+        to the callback.
       <li>api.compile(apiURL, code, callback).  Submits the code to
         the online Solidity compiler, returning the output to the
         callback function.  This output is an object of the form
@@ -130,17 +159,10 @@ contract NameCoin {
         given URL, using the parameters provided.  The response is in
         the form of a comma-separated string of new addresses for the
         contracts it creates, which is returned to the callback.
-      <li>api.getStorage(apiURL, address, callback).  Retrieves the
-        full storage contents of the contract at the address, provided
-        to the callback as an association list {key: value}.  Both the
-        key and value are normalized to 64-nibble hex strings.
       <li>api.getContractsCreated(apiURL, txHash, callback).
         Retrieves the list of contracts created (as in api.submit) by
         the transaction whose hash is txHash, and returns it to the
         callback.
-      <li>api.getNonce(apiURL, address, callback).  Retrieves the
-        current nonce (number of valid transactions sent from) of the
-        contract at the given address, and passes it to the callback.
       <li>api.pushTX(nonce, gasPrice, gasLimit, toAddress, ethValue,
         data, privateKey, URL, callback).  Sends a transaction to the
         URL (canonically "/includetransaction") with the given

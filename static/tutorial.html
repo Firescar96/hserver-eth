@@ -80,8 +80,8 @@
 
 
   <body>
-    <script src="http://stablenet.blockapps.net/ethlightjs.min.js"></script>
-    <script src="http://stablenet.blockapps.net/includetransaction/pushtx.js"></script>
+    <script src="/ethlightjs.min.js"></script>
+    <script src="/static/js/pushtx.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script>
       var helpers = ethlightjs.helpers;
@@ -89,29 +89,55 @@
       var password = 'mypassword';
       var keystore = undefined;
       var addresses = undefined;
-  
-      function pushSolidity(outputEl,button) {
-        var data = $(outputEl).data('bin');
-        var nc = parseInt(nonce.value);
+      var apiURL = "" // "http://stablenet.blockapps.net"
+      var gasPrice = 100;
+      var gasLimit = 3141591;
 
-        var gasPrice = 100;
-        var gasLimit = 3141591;
-        var value = 100000;
-
-        var privateKey = prvkey.value;
-        var url = 'http://stablenet.blockapps.net/includetransaction';
-           
-        function handleResponseSolidity(response) { 
-          handleResponseSolidityButton(outputEl,button,response);
+      function pushSolOrCallFunc(inputEl,data,button,storageArea) {
+        if (button.value === "Push Solidity Code") {
+          console.log("about to push solidity");
+          var code = inputEl.value;
+          var privateKey = document.getElementById("prvkey").value;
+          console.log(privateKey);
+          api.getContract(apiURL, code, privateKey, gasPrice, gasLimit,
+                          function (contract) {
+                            $(button).data('contractObject', contract);
+                            button.value = "Call Function";    
+                            button.innerHTML = "Call Function";
+                            storageUpdate(button,storageArea);
+                          });
         }
-      
-        api.pushTX(nc,gasPrice,gasLimit,undefined,value,data,privateKey,url,handleResponseSolidity);
-        button.value = "Call Function";    
-        button.innerHTML = "Call Function";
+        else if (button.value === "Call Function") {
+          var contract = $(button).data('contractObject');
+          var address = contract.address;
+             
+          console.log("sending to contract address: " + address);
+          console.log("data payload               : " + data);
 
-        // loadAccountInfo();
+          var n = document.getElementById("nonce").value;
+          var value = 0;
+          var privateKey = document.getElementById("prvkey").value;
+          var url = apiURL + '/includetransaction';
+
+          api.pushTX(n,gasPrice,gasLimit,address,value,data,privateKey,url,
+                     function (x) {
+                       storageUpdate(button,storageArea);
+                     });
+        }
       }
-
+      
+      function storageUpdate(button,stor) {
+        var contract = $(button).data('contractObject');
+        stor.value = "";
+        contract.sync("",function() {
+          for (var r in contract.vars) {
+            var s = JSON.stringify(contract.vars[r]);
+            console.log("storage value: " + s);
+            stor.value += r + " : " + s + "\n";
+          }
+        });
+      }
+      
       function selectedValue(select) {
         return select[select.selectedIndex].innerHTML
       }
@@ -132,93 +158,6 @@
         // console.log("funcname       : " + selectedValue(select));
  
         return api.functionNameToData($(outputEl).data('solabi').abi, selectedValue(select), listArgs(tab));
-      }
-
-      function pushSolOrCallFunc(outputEl,data,button) {
-        if (button.value === "Push Solidity Code") {
-          console.log("about to push solidity");
-          pushSolidity(outputEl,button);
-        } else if (button.value === "Call Function") {
-  
-           var nc = parseInt(nonce.value);
-
-           var gasPrice = 100;
-           var gasLimit = 3141591;
-           var value = 0;
-
-           var privateKey = prvkey.value;
-           var url = 'http://stablenet.blockapps.net/includetransaction';
-        
-           console.log("sending to contract address: " + $(button).data('address').toString('hex'));
-           console.log("data payload               : " + data);
-           api.pushTX(nc,gasPrice,gasLimit,$(button).data('address'),value,data,privateKey,url,handleResponseFunctionCall);
-  
-        }
-      }
-
-      function handleResponseFunctionCall(response) {
-        //console.log("parse: " + response.split('='));
-        var hash = response.split('=')[1];
-        var oReq = new XMLHttpRequest();
-        console.log("transaction hash: " + hash);
-        oReq.open("GET", "http://stablenet.blockapps.net/transactionResult/" + hash, true);
-        oReq.onload = function () { 
-          if(oReq.readyState == 4 && oReq.status == 200) {
-            var responseJSON = JSON.parse(this.responseText);
-            console.log(JSON.stringify(responseJSON));
-           }    
-         }
- 
-       oReq.send();
-      }
-
-      function handleResponseSolidityButton(outputEl,button,response) {
-        //console.log("parse: " + response.split('='));
-        var hash = response.split('=')[1];
-        var oReq = new XMLHttpRequest();
-        console.log("transaction hash: " + hash);
-
-        $(button).data('lasthash',hash);
-        oReq.open("GET", "http://stablenet.blockapps.net/transactionResult/" + hash, true);
-        oReq.onload = function () { 
-          if(oReq.readyState == 4 && oReq.status == 200) {
-            alert("Transaction successful!  Please press OK.");
-            var responseJSON = JSON.parse(this.responseText);
-            console.log(responseJSON[0].contractsCreated.toString('hex'));
-            var solabi = $(outputEl).data('solabi');
-            $(button).data('address',responseJSON[0].contractsCreated.toString('hex'));
-            $(button).data('contractObject',new api.Contract($(button).data('address'),solabi, $(outputEl).data('xabi')[solabi.name]));  
-          
-           }    
-         }
- 
-       oReq.send();
-      }
-
-
-      function createContractObj(outputEl,button,stor) { 
-       if (typeof $(button).data('contractObject') === 'undefined' && !(typeof $(button).data('lasthash') === 'undefined')) {
-        console.log("lasthash: " + $(button).data('lasthash'));
-        var oReq = new XMLHttpRequest();
-        oReq.open("GET", "http://stablenet.blockapps.net/transactionResult/" + $(button).data('lasthash'), true);
-        oReq.onload = function () { 
-          if(oReq.readyState == 4 && oReq.status == 200) {
-            var responseJSON = JSON.parse(this.responseText);
-            console.log(responseJSON[0].contractsCreated.toString('hex'));
-            var solabi = $(outputEl).data('solabi');
-            $(button).data('address',responseJSON[0].contractsCreated.toString('hex'));
-
-          
-           }
-       
-         }
-
-       oReq.send();
-       var solabi = $(outputEl).data('solabi');
-       
-       if (!(typeof $(button).data('address') === 'undefined')) 
-         $(button).data('contractObject',new api.Contract($(button).data('address'),solabi, $(outputEl).data('xabi')[solabi.name]));  
-       }
       }
 
       function setSeed() {
@@ -334,7 +273,7 @@
           // console.log("address: " + address);
           // console.log("password: " + password);
           prvKey = keystore.exportPrivateKey(address, password);
-          // console.log("setting prvkey: " + prvKey);
+          //console.log("setting prvkey: " + (typeof prvKey));
 
           document.getElementById("prvkey").value = prvKey;
      
@@ -344,7 +283,7 @@
       	} 
 
           var oReq = new XMLHttpRequest();
-          oReq.open("GET", "http://stablenet.blockapps.net/query/account?address=" + address, true);
+          oReq.open("GET", apiURL + "/query/account?address=" + address, true);
           oReq.onload = function () { 
           if(oReq.readyState == 4 && oReq.status == 200) {
 	    invalidPrvKeyWarning.style.visibility="hidden";
@@ -371,7 +310,7 @@
           var address =  document.getElementById("address").value;
 
           var oReq = new XMLHttpRequest();
-          oReq.open("POST", "http://stablenet.blockapps.net/faucet", true);
+          oReq.open("POST", apiURL + "/faucet", true);
 
           var params = "address=" + encodeURIComponent(address);
           oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -385,18 +324,9 @@
         oReq.send(params);
       }
 
-      function storageUpdate(button,stor) { 
-           if (!(typeof $(button).data('contractObject') === 'undefined')) { 
-             $(button).data('contractObject').showStorage("http://stablenet.blockapps.net", function (r) {
-                 //console.log("storage value: " + JSON.stringify(r));
-                 stor.value =  JSON.stringify(r);
-               });
-           }
-     }
-
      function compile(inputEl, outputEl, opt, tab, submitButton) {
         var oReq = new XMLHttpRequest();
-        oReq.open("POST", "http://stablenet.blockapps.net/solc", true);
+        oReq.open("POST", apiURL + "/solc", true);
 
         var src = inputEl.value;
 
@@ -514,7 +444,7 @@ storageSelect[storageSelect.selectedIndex].innerHTML, $(storageOutput).data('sol
           <tr>
           <tr>
           </tr>
-          <td><button type="submit" onclick="pushSolOrCallFunc(storageOutput,storageData.value,storageButton)" id="storageButton">Push Solidity Code</button></td>
+          <td><button type="submit" onclick="pushSolOrCallFunc(storageInput,storageData.value,storageButton,storageStorage)" id="storageButton">Push Solidity Code</button></td>
           </tr>
       </table>
       <textarea id="storageData" style="width: 600px; height: 20px" readonly="true"></textarea><br>      
@@ -560,7 +490,7 @@ memorySelect[memorySelect.selectedIndex].innerHTML, $(memoryOutput).data('solabi
           <tr>
           <tr>
           </tr>
-          <td><button type="submit" id="memoryButton" onclick="pushSolOrCallFunc(memoryOutput,memoryData.value,memoryButton)" >Push Solidity Code</button></td>  
+          <td><button type="submit" id="memoryButton" onclick="pushSolOrCallFunc(memoryInput,memoryData.value,memoryButton,memoryStorage)" >Push Solidity Code</button></td>  
           </tr>
       </table>
       <textarea id="memoryData" style="width: 600px; height: 20px" readonly="true"></textarea><br>      
@@ -595,7 +525,7 @@ firstSelect[firstSelect.selectedIndex].innerHTML, $(firstOutput).data('solabi'))
           <tr>
           <tr>
           </tr>
-           <td><button type="submit" id="firstButton" onclick="pushSolOrCallFunc(firstOutput,firstData.value,firstButton)" >Push Solidity Code</button></td>
+           <td><button type="submit" id="firstButton" onclick="pushSolOrCallFunc(firstInput,firstData.value,firstButton,firstStorage)" >Push Solidity Code</button></td>
           </tr>
       </table>
       <textarea id="firstData" style="width: 600px; height: 20px" readonly="true"></textarea><br>      
@@ -645,7 +575,7 @@ passSelect[passSelect.selectedIndex].innerHTML, $(passOutput).data('solabi')),pa
           <tr>
           <tr>
           </tr>
-           <td><button type="submit" id="passButton" onclick="pushSolOrCallFunc(passOutput,passData.value,passButton)" >Push Solidity Code</button></td>
+           <td><button type="submit" id="passButton" onclick="pushSolOrCallFunc(passInput,passData.value,passButton,passStorage)" >Push Solidity Code</button></td>
           </tr>
       </table>
       <textarea id="passData" style="width: 600px; height: 20px" readonly="true"></textarea><br>      
@@ -725,7 +655,7 @@ multiSelect[multiSelect.selectedIndex].innerHTML, $(multiOutput).data('solabi'))
           <tr>
           <tr>
           </tr>
-           <td><button type="submit" id="multiButton" onclick="pushSolOrCallFunc(multiOutput,multiData.value,multiButton)" >Push Solidity Code</button></td>
+           <td><button type="submit" id="multiButton" onclick="pushSolOrCallFunc(multiInput,multiData.value,multiButton,multiStorage)" >Push Solidity Code</button></td>
           </tr>
       </table>
       <textarea id="multiData" style="width: 600px; height: 20px" readonly="true"></textarea><br>      
@@ -755,23 +685,6 @@ In general, error handling on Ethereum is an open question. For a contract calle
     compile(passInput,passOutput,passSelect,passTable,passButton);
     compile(multiInput,multiOutput,multiSelect,multiTable,multiButton);
     setInterval(loadAccountInfo,1000);
-    setInterval(function() { 
-
-       createContractObj(storageOutput,storageButton,storageStorage);
-       createContractObj(memoryOutput,memoryButton,memoryStorage);
-       createContractObj(firstOutput,firstButton,firstStorage);
-       createContractObj(passOutput,passButton,passStorage);
-       createContractObj(multiOutput,multiButton,multiStorage);
-
-       storageUpdate(storageButton,storageStorage); 
-       storageUpdate(memoryButton,memoryStorage); 
-       storageUpdate(firstButton,firstStorage); 
-       storageUpdate(passButton,passStorage); 
-       storageUpdate(multiButton,multiStorage); 
-
-       firstData.value=dataPayload(firstOutput,firstSelect,firstTable);
-     }
-    ,1000);
     hash();
 
    </script>
