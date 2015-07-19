@@ -119,10 +119,10 @@
           var privateKey = document.getElementById("prvkey").value;
           var url = apiURL + '/includetransaction';
 
-          api.pushTX(n,gasPrice,gasLimit,address,value,data,privateKey,url,
-                     function (x) {
-                       storageUpdate(button,storageArea);
-                     });
+          api.send(apiURL, data, privateKey, address, gasPrice, gasLimit, value,
+                   function (x) {
+                     storageUpdate(button,storageArea);
+                   });
         }
       }
       
