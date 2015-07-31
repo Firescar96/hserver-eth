@@ -3,17 +3,20 @@
 module Handler.Solc where
 
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
 
 import Control.Monad.Trans.Either
 
 import Data.Char
+import qualified Data.Map as Map(fromList)
 
 import Import
 import qualified Data.List (sort)
 import Handler.BlkLast
 import System.Process
-import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3,
-                              withSmallInput)
+import qualified Data.ByteString.Lazy as BL
+import Data.Aeson.Encode as J 
+import Blockchain.Solidity.ABI   
 
 runSolc::String->String->EitherT String IO [(String, String)]
 runSolc theType input = do
@@ -26,12 +29,26 @@ getResponse::String->EitherT String IO String
 getResponse val = do
   abis <- runSolc "json-abi" val
   compiled <- runSolc "binary" val
+  let extABI = makeABISymbols <$> getABI ("") (val)
+  
+  let xABI = case extABI of 
+              (Right extABI') -> T.decodeUtf8 $ BL.toStrict $ J.encode extABI'
+              (Left err) -> ""
   return $ 
-    "{\"abis\": " ++ abisToJSON abis ++ ", \"contracts\": " ++ contractsToJSON compiled ++ "}"
-
+    "{\"abis\": " ++ 
+          abisToJSON abis ++ 
+          ", \"contracts\": " ++ 
+          contractsToJSON compiled ++ 
+          ", \"xabis\": " ++ 
+          (T.unpack $ xABI) ++ 
+          "}"
+  
+    
 
 postSolcR::Handler Text
 postSolcR = do
+  addHeader "Access-Control-Allow-Origin" "*"
+
   maybeVal <- lookupPostParam "src"
   liftIO $ putStrLn $ T.pack $ show maybeVal
   case maybeVal of

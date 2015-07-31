@@ -185,12 +185,22 @@
             alert('Transaction has been submitted successfully!');
             loadAccountInfo();
 
+            console.log(compilerData.abis[0].abi);
+
             var form = $('<form method="post" action="/afterSubmission.html"></form>'); //http://stablenet.blockapps.net
             var abi = $('<input type="text" name="abi"></input>')
               .val(JSON.stringify(compilerData.abis[0].abi));
 
+<<<<<<< HEAD
             var contractAddress = $('<input type="text" name="contractAddress"></input>')
               .val(util.generateAddress($('#address').val(), parseInt($('#nonce').html())).toString('hex'));
+=======
+            var input2 = document.createElement('input');
+            input2.type = "text";
+            input2.name = "contractAddress";
+            input2.value = utils.generateAddress(address.value, parseInt(nonce.value)).toString('hex');
+            form.appendChild(input2);
+>>>>>>> 4e72dc5ba8a51a92566f846a6c23652274f28f8b
 
             var transactionHash = $('<input type="text" name="transactionHash">')
               .val(x);
@@ -213,21 +223,21 @@
       function submitTransaction() {
         if (compilerData.error) {
           alert("You can't submit the contract until it has succesfully compiled");
-	  return;
+	        return;
         }
 
         if (compilerData.contracts.length == 0) {
           alert("Error!  There is no contract to submit.");
-	  return;
+	        return;
         }
 
         if (compilerData.contracts.length != 1) {
           alert("Sorry, submitting more than one contract not currently supported!");
-	  return;
+	        return;
         }
 
-	spinnerBox.style.visibility = "visible";
-        var url = '/includetransaction';
+	      spinnerBox.style.visibility = "visible";
+        var url = 'http://stablenet.blockapps.net/includetransaction';
         var value =  0;
 
         api.pushTX(
@@ -283,6 +293,8 @@
             .remove()
             .end()
 
+          console.log(address);
+
           for(i = 0; i < 10; i++){
             var newAddr = keystore.generateNewAddress(password)
             address.append(
@@ -320,116 +332,106 @@
 
   </head>
   <body>
-    <h1>Type your Solidity source code in below</h1>
-    <div style="width: 100%">
-      <textarea id="input" onchange="compile();" onkeyup="compile()">
-contract NameCoin {
+    <div id="container">
+      <div id="solidity-compiler">
+        <textarea id="input" onchange="compile();" onkeyup="compile()">
+          contract NameCoin {
 
-    struct Item {
-      address owner;
-      uint value;
-    }
+            struct Item {
+              address owner;
+              uint value;
+            }
 
-    address gAddress;
-    uint gValue;
-    mapping (uint => Item) registry;
-    
-    function NameCoin() {
-        gAddress = msg.sender;
-    }
+            address gAddress;
+            uint gValue;
+            mapping (uint => Item) registry;
 
-    function register(uint key) {
-      if (registry[key].owner == 0) {
-         registry[key].owner = msg.sender;
-      }
-    }
+            function NameCoin() {
+              gAddress = msg.sender;
+            }
 
-    function transferOwnership(uint key, address newOwner) {
-      if (registry[key].owner == msg.sender) {
-          registry[key].owner = newOwner;
-      }
-    }
+            function register(uint key) {
+              if (registry[key].owner == 0) {
+                registry[key].owner = msg.sender;
+              }
+            }
 
-    function setValue(uint key, uint newValue) {
-      if (registry[key].owner == msg.sender) {
-        registry[key].value = newValue;
-      }
-    }
+            function transferOwnership(uint key, address newOwner) {
+              if (registry[key].owner == msg.sender) {
+                registry[key].owner = newOwner;
+              }
+            }
 
-    function getValue(uint key) constant returns (uint value) {
-      gValue = registry[key].value;
-    }
+            function setValue(uint key, uint newValue) {
+              if (registry[key].owner == msg.sender) {
+                registry[key].value = newValue;
+              }
+            }
 
-    function getOwner(uint key) constant returns (address owner) {
-      gAddress = registry[key].owner;
-    }
-}
+            function getValue(uint key) constant returns (uint value) {
+              gValue = registry[key].value;
+            }
 
-      </textarea>
-      <textarea id="output" style="border: 0px;" readonly="true"></textarea>
+            function getOwner(uint key) constant returns (address owner) {
+              gAddress = registry[key].owner;
+            }
+          }
+
+        </textarea><!--
+        --><textarea id="output" style="border: 0px;" readonly="true"></textarea>
+      </div>
+
+      <div id="account-info">
+        <label for="seed">Seed:</label>
+        <input id="seed" style="width: 500px;"
+        value="unhappy nerve cancel reject october fix vital pulse cash behind curious bicycle"
+        onkeyup="loadSeedInfo();" onload="loadSeedInfo();"/>
+        <br/>
+        <br/>
+        <label for="password">Password:</label>
+        <input id="password" type="password" value='mypassword'/>
+        <br/>
+        <br/>
+        <label>Private Key:</label>
+        <p id="prvkey"><p/>
+        <br/>
+        <br/>
+        <label for="address">Address:</label>
+        <select id="address" onchange="loadAccountInfo()">
+          <option>no address</option>
+        </select>
+        <br/>
+        <br/>
+        <button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button>
+
+        <details>
+          <summary>Advanced Options</summary>
+          <table>
+            <tr>
+              <td class="text-right"><label for="gasLimit">Gas Limit:</label></td>
+              <td><input id="gasLimit" value="1000000"/></td>
+            </tr>
+            <tr>
+              <td class="text-right"><label for="gasPrice">Gas Price:</label></td>
+              <td><input id="gasPrice" value="100000"/></td>
+            </tr>
+            <tr>
+              <td class="text-right"><label for="nonce">Nonce:</label></td>
+              <td><span id="nonce">0</span></td>
+            </tr>
+          </table>
+        </details>
+      </div>
     </div>
-
-    <table>
-
-      <tr>
-  <td style="text-align: right;"><label for="seed">Seed:</label></td>
-  <td><input id="seed" style="width: 500px;" 
-       value="unhappy nerve cancel reject october fix vital pulse cash behind curious bicycle"
-       onkeyup="loadSeedInfo();" onload="loadSeedInfo();"/></td>
-      </tr>
-      <tr>
-  <td style="text-align: right;"><label for="password">Password:</label></td>
-  <td><input id="password" style="width: 300px;" type="password" value='mypassword'/></td>
-      </tr>
-
-
-
-
-      <tr>
-	<td style="text-align: right;"><label for="prvkey">Private Key:</label></td>
-	<td><input id="prvkey" style="width: 500px;" 	    /><div id="invalidPrvKeyWarning" class="error">Invalid Private Key</div></td>
-      </tr>
-      <tr>
-	<td style="text-align: right;"><label for="address">Address:</label></td>
-	<td><select id="address" onchange="loadAccountInfo()">
-       <option value=undefined>no address found</option>
-       </select>
-      </tr>
-      <tr>
-	<td style="text-align: right;"></td>
-	<td style="text-align: right;"><button id="submitButton" onclick="submitTransaction()">Press here to submit transaction</button></td>
-      </tr>
-    </table>
-
-    <details>
-      <summary>Advanced Options</summary>
-      <table style="border: solid; width: 400px; ">
-	<tr>
-	  <td style="text-align: right;"><label for="gasLimit">Gas Limit:</label></td>
-	  <td><input id="gasLimit" value="1000000" style="width: 300px;" /></td>
-	</tr>
-	<tr>
-	  <td style="text-align: right;"><label for="gasPrice">Gas Price:</label></td>
-	  <td><input id="gasPrice" value="100000" style="width: 300px" /></td>
-	</tr>
-	<tr>
-	  <td style="text-align: right;"><label for="nonce">Nonce:</label></td>
-	  <td><input id="nonce" value="0" style="width: 300px" readonly /></td>
-	</tr>
-      </table>
-    </details>
-
     <div id="spinnerBox">
       <div class="spinner" />
     </div>
-    
-    
+
+
     <script>
-      compile(); 
-      loadSeedInfo();
-      loadAccountInfo();
-      input.selectionStart = 10;
-      input.selectionEnd = 22;
+    compile();
+    loadSeedInfo();
+    loadAccountInfo();
     </script>
   </body>
 </html>

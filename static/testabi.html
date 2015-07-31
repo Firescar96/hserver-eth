@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <style>
+      textarea {
+        width: 48%;
+        height: 90%;
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+    </style>
+    <script src="js/api.js"></script>
+  </head>
+  <body>
+    <div style="width: 100%">
+      <textarea id="input">
+contract NameCoin {
+
+    struct Item {
+      address owner;
+      uint value;
+    }
+
+    address gAddress;
+    uint gValue;
+    mapping (uint => Item) registry;
+    
+    function NameCoin() {
+        gAddress = msg.sender;
+    }
+
+    function register(uint key) {
+      if (registry[key].owner == 0) {
+         registry[key].owner = msg.sender;
+      }
+    }
+
+    function transferOwnership(uint key, address newOwner) {
+      if (registry[key].owner == msg.sender) {
+          registry[key].owner = newOwner;
+      }
+    }
+
+    function setValue(uint key, uint newValue) {
+      if (registry[key].owner == msg.sender) {
+        registry[key].value = newValue;
+      }
+    }
+
+    function getValue(uint key) constant returns (uint value) {
+      gValue = registry[key].value;
+    }
+
+    function getOwner(uint key) constant returns (address owner) {
+      gAddress = registry[key].owner;
+    }
+}
+      </textarea>
+      <textarea id="abidata"></textarea>
+    </div>
+    <table>
+      <tr>
+        <label for="privkey">Private Key:</label>
+        <input id="privkey" style="width: 500px;"
+               value="1dd885a423f4e212740f116afa66d40aafdbb3a381079150371801871d9ea281"/>
+      </tr>
+      <tr>
+        <button id="submitButton" onclick="submitCode()"
+                >Press here to submit transaction</button>
+      </tr>
+    </table>
+
+    <script>
+      var privkey = document.getElementById('privkey');
+      var input = document.getElementById('input');
+
+      var apiURL = "http://localhost:3000";
+
+      function submitCode() {
+          api.Solidity(input.value).toContract({
+              apiURL:apiURL,
+              fromAccount:api.Contract({privkey: privkey.value}),
+              value:0,
+              gasPrice:1,
+              gasLimit:3141592,
+            },
+            displayContract
+          )
+      }
+      
+      function displayContract(contract) {
+          function addToAbidata() {
+              abidata.value = "Balance: " + contract.balance;
+              abidata.value += "\n\nContract state variables:"
+              for (var sym in contract.get) {
+                  val = contract.get[sym]
+                  abidata.value += "\n" + sym + " = " + val;
+                  if (val.isMapping) {
+                     abidata.value += " : 1729 => " + val(api.Types.Int(1729));
+                  }
+               }
+          }
+          contract.sync("", addToAbidata);
+      }
+    </script>
+
+    <h2>API documentation</h2>
+    <p>Many of the functions below take an "apiURL", which indicates
+    from what server the API queries are to be obtained.  If running a
+    server locally, "" is allowed; the canonical one is
+    "http://stablenet.blockapps.net".
+    <ul>
+      <li>Contract object: api.Contract(address, functionABI,
+        symbolTable).  It has the properties:
+        <ul>
+          <li>address: the address of the contract object, assigned at
+            creation.
+          <li>nonce: the address's nonce, current as of the last call
+            to sync(), described below.
+          <li>balance: the address's balance, current as of the last
+          call to sync().
+          <!-- <li>makeCall(functionName, args).  Forms the data string to -->
+          <!--   be sent in an Ethereum transaction to call the function with -->
+          <!--   the given arguments. -->
+          <li>sync(apiURL, callback): this asynchronous function reads
+            the blockchain (via the REST api exposed at
+            stablenet.blockapps.net) to determine the current nonce,
+            balance, and state variable values of the address.  The
+            callback (which takes no arguments) is then invoked.
+          <li>vars: an associative array whose properties are the
+            names of all Solidity state variables of the contract, as
+            described in the symbolTable argument to the constructor.
+            These properties are interpreted as reasonable Javascript
+            types:
+            <ul>
+              <li>bool: Boolean
+              <li>address: String (of the form "0x..." with 40 hex
+                digits)
+              <li>uint/int: (any bit size) a BigInt, from the
+                big-integer library.
+              <li>bytes: (any bit size or dynamic) a string,
+                containing the hex representation of the bytes.
+              <li>string: a string.  Note that bytes and string are
+                currently not correctly implemented in solc.
+              <li>contracts: Contract object.  This is not currently
+                implemented.
+              <li>structs: JS object whose properties are the fields
+                of the struct.
+              <li>arrays: JS array of the values as their associated
+                JS objects.
+              <li>mappings: a function taking an elementary type (in
+                its JS representation) and returning the associated
+                value (also in JS representation).  This is not
+                well-tested currently.
+            </ul>
+        </ul>
+      <li>api.getContract(apiURL, code, privKey, gasPrice, gasLimit,
+        callback): the actual interface for constructing a Contract
+        object from Solidity code.  This compiles the code, submits it
+        as a contract creation transaction from the address owning the
+        private key, extracts the necessary data to interpret the
+        variables (the "symbol table" argument, symtab, to Contract),
+        and creates the contract object.  This new contract is passed
+        to the callback.
+      <li>api.compile(apiURL, code, callback).  Submits the code to
+        the online Solidity compiler, returning the output to the
+        callback function.  This output is an object of the form
+        {contracts: [{name: contractName, bin: compiledCode}], abis:
+        [{abi: contractFunctions}], xabis: {contractName:
+        storageLayout}}.  The contractFunctions object is defined by
+        Solidity; the storageLayout format varies depending on the
+        variable type but always contains fields "bytesUsed" and
+        "solidityType".  Some of its entries are type declarations;
+        the actual variables have the field "atStorageKey" as well.
+      <li>api.submit(apiURL, compiledCode, privateKey, gasPrice,
+        gasLimit, callback).  Submits compiled Solidity code via the
+        given URL, using the parameters provided.  The response is in
+        the form of a comma-separated string of new addresses for the
+        contracts it creates, which is returned to the callback.
+      <li>api.getContractsCreated(apiURL, txHash, callback).
+        Retrieves the list of contracts created (as in api.submit) by
+        the transaction whose hash is txHash, and returns it to the
+        callback.
+      <li>api.pushTX(nonce, gasPrice, gasLimit, toAddress, ethValue,
+        data, privateKey, URL, callback).  Sends a transaction to the
+        URL (canonically "/includetransaction") with the given
+        parameters, handing the response to callback.  This response is
+        simply the query URL to look up the raw transaction
+        ("http://stablenet.blockapps.net/query/transaction?hash=txHash"),
+        which is probably not what you want.  Thus, callback should
+        probably extract txHash and GET from "/transactionResult/txHash"
+        to obtain more detailed information.
+  </body>
+</html>

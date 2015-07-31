@@ -22,6 +22,8 @@
 
 /query/queued/ QueuedTransactionsR GET
 /includetransaction IncludeTransactionR POST OPTIONS
+/faucet FaucetR POST
+/extabi ExtABIR POST
 
 /query/block BlockInfoR GET
 /query/block/number/#Integer/ BlkNumberR GET

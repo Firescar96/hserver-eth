@@ -46,9 +46,7 @@ postIncludeTransactionR = do
                   (String h') ->
                     sendResponseStatus status200 (("/query/transaction?hash=" ++ h') :: Text)
                     
-       (Error msg) -> do
---                liftIO $ Import.putStrLn $ T.pack $ msg
-                sendResponseStatus status404  ("Could not parse" :: Text)
+       Error msg -> invalidArgs [T.pack msg]
 
 optionsIncludeTransactionR :: Handler RepPlain
 optionsIncludeTransactionR = do
